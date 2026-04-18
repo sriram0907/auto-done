@@ -3,6 +3,7 @@ import re
 import sys
 import json
 import time
+import datetime
 
 # Force UTF-8 output on Windows (avoids charmap codec errors for → ✓ etc.)
 if hasattr(sys.stdout, "reconfigure"):
@@ -53,17 +54,44 @@ PORTAL_HEADERS = {
     "Content-Type": "application/x-www-form-urlencoded",
 }
 
-# Hardcoded meal times per dish (confirmed accurate; portal radio detection unreliable)
-MEAL_TIME_MAP = {
-    "CHILLI GOBI":                   "Lunch",
-    "CHICKEN PALLIPALAYAM/CHETINAD": "Lunch",
-    "MUSHROOM PALLIPALAYAM":         "Dinner",
-    "OMELETTE":                      "Breakfast",
-    "BOILED EGG/EGG KURMA":         "Lunch",
-    "MUTTON CURRY":                  "Dinner",
-    "BABY CORN MANCHURIAN":          "Dinner",
-    "PANEER":                        "Dinner",
+# ─── Day-of-week meal schedule ───────────────────────────────────────────────
+# Dishes with an empty dict have no tokens this cycle and will be greyed out.
+
+DISH_SCHEDULE = {
+    "CHILLI GOBI": {
+        "Thursday": "Dinner",
+        "Sunday":   "Lunch",
+    },
+    "CHICKEN PALLIPALAYAM/CHETINAD": {
+        "Sunday":   "Lunch",
+        "Thursday": "Dinner",
+    },
+    "MUSHROOM PALLIPALAYAM": {
+        "Thursday": "Dinner",
+    },
+    "OMELETTE": {
+        "Monday":    "Lunch",
+        "Tuesday":   "Lunch",
+        "Wednesday": "Breakfast",
+        "Saturday":  "Lunch",
+        "Sunday":    "Breakfast",
+    },
+    "BOILED EGG/EGG KURMA": {
+        "Thursday": "Lunch",
+        "Friday":   "Dinner",
+    },
+    "MUTTON CURRY":        {},
+    "BABY CORN MANCHURIAN": {},
+    "PANEER":              {},
 }
+
+def get_meal_for_date(dish_name, date_str):
+    """Return the meal time for a dish on a given date (format: DD-MM-YYYY)."""
+    try:
+        day = datetime.datetime.strptime(date_str, "%d-%m-%Y").strftime("%A")
+        return DISH_SCHEDULE.get(dish_name, {}).get(day, "Lunch")
+    except Exception:
+        return "Lunch"
 
 # ─── Session helpers ──────────────────────────────────────────────────────────
 
@@ -135,8 +163,9 @@ def scrape_dishes(s):
             print(f"[SCRAPE] {dish_name}: PTOKEN_ID={token_id} (fallback hardcoded)")
 
         btn = soup.find(id=btn_id)
+        has_tokens = bool(DISH_SCHEDULE.get(dish_name))  # empty dict → no tokens
         if btn is None:
-            dishes.append({"name": dish_name, "token_id": token_id, "dates": [], "meal": MEAL_TIME_MAP.get(dish_name, "Lunch")})
+            dishes.append({"name": dish_name, "token_id": token_id, "dates": [], "has_tokens": has_tokens})
             continue
         container = btn.parent
         for _ in range(8):
@@ -148,7 +177,7 @@ def scrape_dishes(s):
                 break
             container = container.parent
         if container is None:
-            dishes.append({"name": dish_name, "token_id": token_id, "dates": [], "meal": MEAL_TIME_MAP.get(dish_name, "Lunch")})
+            dishes.append({"name": dish_name, "token_id": token_id, "dates": [], "has_tokens": has_tokens})
             continue
         dates = []
         if select_el:
@@ -157,9 +186,8 @@ def scrape_dishes(s):
                 if val:
                     dates.append(val)
 
-        meal = MEAL_TIME_MAP.get(dish_name, "Lunch")
-        print(f"[SCRAPE] {dish_name} → token_id={token_id}, meal={meal}, dates={dates}")
-        dishes.append({"name": dish_name, "token_id": token_id, "dates": dates, "meal": meal})
+        print(f"[SCRAPE] {dish_name} → token_id={token_id}, has_tokens={has_tokens}, dates={dates}")
+        dishes.append({"name": dish_name, "token_id": token_id, "dates": dates, "has_tokens": has_tokens})
     return dishes
 
 # ─── Routes ───────────────────────────────────────────────────────────────────
@@ -259,7 +287,6 @@ def preview():
         name       = request.form.get(name_key, "")
         dates_json = request.form.get(f"dish_dates_{idx}", "[]")
         qty        = int(request.form.get(f"dish_qty_{idx}", 0))
-        meal       = request.form.get(f"dish_meal_{idx}", "Lunch")  # scraped default
 
         # qty == 0 means the user wants to skip this dish
         if qty > 0:
@@ -268,6 +295,7 @@ def preview():
             except Exception:
                 dates = []
             for date in dates:
+                meal = get_meal_for_date(name, date)  # computed per date from day-of-week schedule
                 bookings.append({
                     "name": name,
                     "token_id": PTOKEN_MAP.get(name, 0),
@@ -285,12 +313,11 @@ def preview():
 def book():
     if not session.get("portal_cookies"):
         return Response('data: {"error":"not authenticated"}\n\n', mimetype="text/event-stream")
-    bookings     = request.get_json(force=True, silent=True) or []
-    rollno       = session.get("rollno", "")
-    password     = session.get("password", "")
+    bookings  = request.get_json(force=True, silent=True) or []
+    rollno    = session.get("rollno", "")
+    password  = session.get("password", "")
 
     def generate():
-        # Reverse map: dish name → button DOM id
         DISH_TO_BUTTON = {v: k for k, v in BUTTON_TO_DISH.items()}
         success_count = 0
         failed_count  = 0
@@ -305,189 +332,195 @@ def book():
             with sync_playwright() as p:
                 browser = p.chromium.launch(
                     headless=True,
-                    args=[
-                        "--no-sandbox",
-                        "--disable-setuid-sandbox",
-                        "--ignore-certificate-errors",
-                        "--disable-web-security",
-                        "--no-proxy-server",
-                        "--disable-extensions",
-                    ]
+                    args=["--no-sandbox", "--disable-setuid-sandbox"]
                 )
                 context = browser.new_context(ignore_https_errors=True)
                 page = context.new_page()
 
-                # ── Step 1: Log in via the real browser ───────────────────────
-                print("[PLAYWRIGHT] Logging in…")
+                # ── XHR login inside the browser — no form-fill needed ─────────
+                print("[PLAYWRIGHT] Navigating to Home/Index for login XHR…")
                 page.goto(
-                    "https://hostelviewx.psgitech.ac.in/Hostel/Home/Index",
+                    f"{BASE_URL}/Home/Index",
                     wait_until="domcontentloaded",
                     timeout=30_000,
                 )
-                # Dump all inputs for diagnosis
-                inputs = page.eval_on_selector_all(
-                    "input", "els => els.map(e => ({name:e.name,id:e.id,type:e.type}))"
-                )
-                print(f"[PLAYWRIGHT] Login page inputs: {inputs}")
-                # Use type-based selectors — more robust than name-based
-                page.locator('input[type="text"]').first.fill(rollno)
-                page.locator('input[type="password"]').first.fill(password)
-                # Tick the terms checkbox if present
-                terms = page.locator('input[type="checkbox"]')
-                if terms.count() > 0:
-                    terms.first.check()
-                page.locator('button[type="submit"]').click()
-                # The portal login is XHR-based: JS POSTs creds, stores JWT in
-                # localStorage, then navigates. wait_for_load_state returns too
-                # early (before the JS navigation). Wait for URL to change instead.
-                page.wait_for_url(
-                    lambda url: "home/index" not in url.lower() and "login" not in url.lower(),
-                    timeout=20_000,
-                )
-                current_url = page.url
-                print(f"[PLAYWRIGHT] After login URL: {current_url}")
-                print("[PLAYWRIGHT] Login succeeded.")
 
-                # Always navigate explicitly to StudentView before booking
-                student_view_url = f"{BASE_URL}/Student/StudentView"
-                print(f"[PLAYWRIGHT] Navigating to StudentView: {student_view_url}")
-                page.goto(student_view_url, wait_until="domcontentloaded", timeout=30_000)
-                page.wait_for_timeout(3000)  # extra wait for JS to initialize
+                jwt = page.evaluate("""
+                    async ([url, rollno, password]) => {
+                        const resp = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: 'name=' + encodeURIComponent(rollno) +
+                                  '&password=' + encodeURIComponent(password)
+                        });
+                        const data = await resp.json();
+                        return data.Token || null;
+                    }
+                """, [f"{BASE_URL}/Login/Authenticate", rollno, password])
+
+                if not jwt:
+                    yield 'data: {"error":"Playwright XHR login failed — invalid credentials or portal error"}\n\n'
+                    browser.close()
+                    return
+
+                print(f"[PLAYWRIGHT] JWT obtained: {jwt[:30]}…")
+
+                # ── Navigate to StudentView ─────────────────────────────────────
+                print("[PLAYWRIGHT] Navigating to StudentView…")
+                page.goto(
+                    f"{BASE_URL}/Student/StudentView",
+                    wait_until="domcontentloaded",
+                    timeout=30_000,
+                )
+                page.wait_for_timeout(2000)
                 print(f"[PLAYWRIGHT] StudentView loaded — URL: {page.url}")
 
-                # StudentView opens on Profile/Overview tab — click "Token Booking" tab
-                print("[PLAYWRIGHT] Clicking Token Booking tab...")
-                token_tab = page.locator("a:has-text('Token Booking'), li:has-text('Token Booking')")
-                token_tab.first.click()
-                page.wait_for_timeout(2000)  # wait for Token Booking tab JS to initialize
-                print("[PLAYWRIGHT] Token Booking tab active.")
+                # Click Token Booking tab (initial)
+                try:
+                    page.locator("a:has-text('Token Booking'), li:has-text('Token Booking')").first.click()
+                    page.wait_for_timeout(1000)
+                except Exception as tab_err:
+                    print(f"[PLAYWRIGHT] Initial tab click failed (non-fatal): {tab_err}")
 
-                # Auto-accept any confirm/alert dialogs the portal shows after clicking Buy
+                # Auto-accept browser dialogs (confirm/alert) triggered by Buy
                 def handle_dialog(dialog):
                     print(f"[PLAYWRIGHT] Dialog: type={dialog.type} msg={dialog.message[:100]}")
                     dialog.accept()
                 page.on("dialog", handle_dialog)
 
-                for i, b in enumerate(bookings):
-                    dish_name = b.get("name", "")
-                    btn_id    = DISH_TO_BUTTON.get(dish_name)
-                    date      = b.get("date", "")
-                    meal      = b.get("meal", "Lunch")   # from preview via MEAL_TIME_MAP
-                    qty       = b.get("qty", 1)
-                    ok        = False
-                    msg       = ""
+                # ── Group bookings by dish — one page reload per dish ──────────
+                grouped: dict = {}
+                for b in bookings:
+                    grouped.setdefault(b["name"], []).append(b)
 
+                booking_index = 0
+
+                for dish_name, dish_bookings in grouped.items():
+                    btn_id = DISH_TO_BUTTON.get(dish_name, "")
+
+                    # One StudentView reload per dish to get fresh card state
+                    print(f"[PLAYWRIGHT] Loading page for dish: {dish_name}")
+                    page.goto(
+                        f"{BASE_URL}/Student/StudentView",
+                        wait_until="domcontentloaded",
+                        timeout=30_000,
+                    )
+                    page.wait_for_timeout(1500)
                     try:
-                        if not btn_id:
-                            raise ValueError(f"No button mapping for: {dish_name}")
+                        page.locator("a:has-text('Token Booking'), li:has-text('Token Booking')").first.click()
+                        page.wait_for_timeout(1000)
+                    except Exception as tab_err:
+                        print(f"[PLAYWRIGHT] Tab click failed (non-fatal): {tab_err}")
 
-                        print(f"[PLAYWRIGHT] Booking {dish_name} | date={date} meal={meal} qty={qty}")
+                    # One-time diagnostic screenshot (first dish only)
+                    if booking_index == 0:
+                        page.screenshot(path="d:/auto-done/hostel_booker/studentview_debug.png")
+                        btn_exists = page.locator(f"#{btn_id}").count() if btn_id else 0
+                        print(f"[PLAYWRIGHT] Button #{btn_id} found: {btn_exists}")
+                        if btn_exists:
+                            html_ctx = page.eval_on_selector(
+                                f"#{btn_id}",
+                                """el => {
+                                    let n = el;
+                                    for(let i=0;i<5;i++){n=n.parentElement;if(!n)break;}
+                                    return n ? n.outerHTML.substring(0,1500) : 'no parent';
+                                }"""
+                            )
+                            print(f"[PLAYWRIGHT] HTML context:\n{html_ctx}")
 
-                        # ── One-time diagnostic: screenshot + HTML dump (first booking only)
-                        if i == 0:
-                            page.screenshot(path="d:/auto-done/hostel_booker/studentview_debug.png")
-                            btn_exists = page.locator(f"#{btn_id}").count()
-                            print(f"[PLAYWRIGHT] Button #{btn_id} found on page: {btn_exists}")
-                            if btn_exists:
-                                html_ctx = page.eval_on_selector(
-                                    f"#{btn_id}",
-                                    """el => {
-                                        let n = el;
-                                        for(let i=0;i<5;i++){n=n.parentElement;if(!n)break;}
-                                        return n ? n.outerHTML.substring(0,1500) : 'no parent';
-                                    }"""
-                                )
-                                print(f"[PLAYWRIGHT] HTML context around button:\n{html_ctx}")
+                    # Book every date for this dish without reloading
+                    for b in dish_bookings:
+                        date = b.get("date", "")
+                        meal = get_meal_for_date(dish_name, date)
+                        qty  = b.get("qty", 1)
+                        ok   = False
+                        msg  = ""
 
-                        # Derive the quantity input id (btn_id without 'token' suffix, + 'qty' or similar).
-                        # We pass btn_id as the "Buy" button id; the evaluate block locates the card
-                        # via DOM traversal, sets date/meal/qty, then clicks the Add button.
-                        result = page.evaluate("""
-                            ([btnId, date, meal, qty]) => {
-                                const buyBtn = document.getElementById(btnId);
-                                if (!buyBtn) return {ok: false, msg: 'Buy button not found: ' + btnId};
+                        # Live status event
+                        yield f"data: {json.dumps({'status': True, 'index': booking_index, 'total': len(bookings), 'dish': dish_name, 'date': date})}\n\n"
 
-                                // Walk up the DOM to find the card container that has a <select>
-                                let card = buyBtn;
-                                for (let i = 0; i < 10; i++) {
-                                    card = card.parentElement;
-                                    if (!card) return {ok: false, msg: 'Card container not found'};
-                                    if (card.querySelector('select')) break;
-                                }
+                        try:
+                            if not btn_id:
+                                raise ValueError(f"No button mapping for: {dish_name}")
 
-                                // Set date in the <select> dropdown
-                                const sel = card.querySelector('select');
-                                if (!sel) return {ok: false, msg: 'No <select> found in card'};
-                                sel.value = date;
-                                sel.dispatchEvent(new Event('change', {bubbles: true}));
+                            print(f"[PLAYWRIGHT] Booking {dish_name} | date={date} meal={meal} qty={qty}")
 
-                                // Set meal radio
-                                const radios = card.querySelectorAll('input[type=radio]');
-                                radios.forEach(r => {
-                                    if (r.value && r.value.toLowerCase() === meal.toLowerCase()) {
-                                        r.checked = true;
-                                        r.click();
+                            page.evaluate("""
+                                ([btnId, date, meal, qty]) => {
+                                    const btn = document.getElementById(btnId);
+                                    if (!btn) throw new Error('Button not found: ' + btnId);
+
+                                    let card = btn;
+                                    for (let i = 0; i < 10; i++) {
+                                        card = card.parentElement;
+                                        if (!card) throw new Error('Card not found');
+                                        if (card.querySelector('select')) break;
                                     }
-                                });
 
-                                // Set quantity on any number input in the card
-                                const qtyInput = card.querySelector('input[type=number], input[type=text][id*=qty], input[type=text][id*=Qty]');
-                                if (qtyInput) {
-                                    qtyInput.value = qty;
-                                    qtyInput.dispatchEvent(new Event('input', {bubbles: true}));
-                                    qtyInput.dispatchEvent(new Event('change', {bubbles: true}));
-                                }
+                                    const sel = card.querySelector('select');
+                                    if (!sel) throw new Error('No select found');
+                                    sel.value = date;
+                                    sel.dispatchEvent(new Event('change', {bubbles: true}));
 
-                                // Click the Add button (blue primary button, NOT the Buy button)
-                                const allBtns = card.querySelectorAll('button');
-                                let addClicked = false;
-                                allBtns.forEach(b => {
-                                    if (!addClicked && b.innerText.trim().toLowerCase() === 'add') {
-                                        b.click();
-                                        addClicked = true;
+                                    const radios = card.querySelectorAll('input[type=radio]');
+                                    radios.forEach(r => {
+                                        if (r.value && r.value.toLowerCase() === meal.toLowerCase()) {
+                                            r.checked = true;
+                                            r.click();
+                                        }
+                                    });
+
+                                    const qtyInput = card.querySelector(
+                                        'input[type=number], input[type=text][id*=qty], input[type=text][id*=Qty]'
+                                    );
+                                    if (qtyInput) {
+                                        qtyInput.value = qty;
+                                        qtyInput.dispatchEvent(new Event('input',  {bubbles: true}));
+                                        qtyInput.dispatchEvent(new Event('change', {bubbles: true}));
                                     }
-                                });
 
-                                return {ok: true, addClicked: addClicked};
-                            }
-                        """, [btn_id, date, meal, qty])
+                                    // Click Add button (NOT the Buy button)
+                                    const allBtns = card.querySelectorAll('button');
+                                    allBtns.forEach(b => {
+                                        if (b.innerText.trim().toLowerCase() === 'add') b.click();
+                                    });
+                                }
+                            """, [btn_id, date, meal, qty])
 
-                        print(f"[PLAYWRIGHT] evaluate result: {result}")
-                        if not result.get("ok"):
-                            raise RuntimeError(result.get("msg", "evaluate failed"))
-                        if not result.get("addClicked"):
-                            print(f"[PLAYWRIGHT] WARNING: Add button was not found/clicked for {dish_name}")
+                            page.wait_for_timeout(1000)
 
-                        # Wait for the portal to register the Add click
-                        page.wait_for_timeout(1500)
+                            # Click Buy button by its stable DOM id
+                            page.locator(f"#{btn_id}").click()
+                            page.wait_for_timeout(1500)
 
-                        # Click the Buy button using its stable DOM id
-                        page.locator(f"#{btn_id}").click()
-                        page.wait_for_timeout(2000)
+                            # Dismiss any inline OK dialog
+                            try:
+                                page.locator("button:has-text('OK')").click(timeout=1000)
+                            except Exception:
+                                pass
 
-                        # Screenshot after first booking to see portal response
-                        if i == 0:
-                            page.screenshot(path="d:/auto-done/hostel_booker/after_buy_debug.png")
-                            print("[PLAYWRIGHT] Screenshot saved: after_buy_debug.png")
+                            page.wait_for_timeout(500)
 
-                        ok  = True
-                        msg = "Booked successfully"
-                        print(f"[PLAYWRIGHT] OK {dish_name} {date}")
+                            # Screenshot after very first booking
+                            if booking_index == 0:
+                                page.screenshot(path="d:/auto-done/hostel_booker/after_buy_debug.png")
+                                print("[PLAYWRIGHT] Screenshot saved: after_buy_debug.png")
 
-                    except Exception as e:
-                        msg = str(e)[:200]
-                        print(f"[PLAYWRIGHT] ✗ {dish_name} {date}: {msg}")
+                            ok  = True
+                            msg = "Booked successfully"
+                            print(f"[PLAYWRIGHT] OK {dish_name} {date} ({meal})")
+                            success_count += 1
 
-                    if ok:
-                        success_count += 1
-                    else:
-                        failed_count += 1
+                        except Exception as e:
+                            msg = str(e)[:200]
+                            print(f"[PLAYWRIGHT] \u2717 {dish_name} {date}: {msg}")
+                            failed_count += 1
 
-                    event = json.dumps({
-                        "index": i, "dish": dish_name, "date": date,
-                        "meal": meal, "qty": qty, "ok": ok, "msg": msg,
-                    })
-                    yield f"data: {event}\n\n"
+                        yield f"data: {json.dumps({'index': booking_index, 'dish': dish_name, 'date': date, 'meal': meal, 'qty': qty, 'ok': ok, 'msg': msg})}\n\n"
+                        booking_index += 1
 
                 browser.close()
 
@@ -501,6 +534,9 @@ def book():
         mimetype="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+
 
 
 @app.route("/logout")
