@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSG iTech Hostel Token Booker</title>
+  <meta name="description" content="Automate hostel food token booking at PSG iTech — select dishes, preview, and confirm in seconds." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Tokens ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #080f0e;
+      --bg-card:      #0d1e1b;
+      --bg-card2:     #112420;
+      --bg-input:     #0a1917;
+      --border:       rgba(255,255,255,0.07);
+      --border-hl:    rgba(255,255,255,0.18);
+      --green-deep:   #002420;
+      --green-mid:    #00382f;
+      --green-glow:   #00c896;
+      --green-soft:   rgba(0,200,150,0.08);
+      --text:         #e8f5f2;
+      --text-muted:   #6b9990;
+      --text-dim:     #3d6860;
+      --success:      #28a745;
+      --success-bg:   rgba(40,167,69,0.12);
+      --error:        #dc3545;
+      --error-bg:     rgba(220,53,69,0.12);
+      --warning:      #f0a500;
+      --radius:       12px;
+      --radius-sm:    7px;
+      --trans:        0.2s ease;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Scrollbar ───────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green-mid); border-radius: 3px; }
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 80px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 36px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--green-mid), #004d40);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 20px rgba(0,200,150,0.15);
+    }
+
+    .logo-text h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+
+    .logo-text p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border: 1px solid var(--border-hl);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--trans);
+    }
+    .logout-btn:hover {
+      background: var(--error-bg);
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    /* ── Card ───────────────────────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+
+    /* ── Login Page ─────────────────────────────────────────────── */
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(0,56,47,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(0,36,32,0.5) 0%, transparent 55%),
+        var(--bg);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-hl);
+      border-radius: 16px;
+      padding: 44px 40px;
+      box-shadow:
+        0 0 60px rgba(0,200,150,0.05),
+        0 24px 64px rgba(0,0,0,0.5);
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-badge {
+      width: 56px; height: 56px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #002420, #00534a);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 0 30px rgba(0,200,150,0.2);
+    }
+
+    .login-card h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .login-card .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.83rem;
+      margin-bottom: 32px;
+    }
+
+    .roll-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-soft);
+      border: 1px solid rgba(0,200,150,0.2);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.78rem;
+      color: var(--green-glow);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input[type="password"],
+    .form-group input[type="number"],
+    .form-group select {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-hl);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color var(--trans), box-shadow var(--trans);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--green-glow);
+      box-shadow: 0 0 0 3px rgba(0,200,150,0.1);
+    }
+
+    .form-group select { cursor: pointer; }
+
+    .error-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: var(--error-bg);
+      border: 1px solid rgba(220,53,69,0.3);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 0.85rem;
+      color: #ff8086;
+      margin-bottom: 20px;
+    }
+
+    /* ── Buttons ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--trans);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00534a, #002420);
+      color: var(--text);
+      width: 100%;
+      box-shadow: 0 4px 16px rgba(0,83,74,0.4);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #00645a, #002f28);
+      box-shadow: 0 6px 20px rgba(0,200,150,0.25);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: var(--bg-card2);
+      border: 1px solid var(--border-hl);
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-card);
+      border-color: var(--green-glow);
+      color: var(--green-glow);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #1a7a30, #0f5a22);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(40,167,69,0.3);
+    }
+    .btn-success:hover {
+      box-shadow: 0 6px 20px rgba(40,167,69,0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      font-size: 0.82rem;
+    }
+    .btn-ghost:hover {
+      border-color: var(--border-hl);
+      color: var(--text);
+      background: var(--bg-card2);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ── Section title ──────────────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Dish Table ─────────────────────────────────────────────── */
+    .dish-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: var(--bg-card2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background var(--trans);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+    td {
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      vertical-align: middle;
+    }
+
+    /* Disabled (no dates) rows */
+    .dish-row.disabled {
+      opacity: 0.38;
+    }
+    .dish-row.disabled td { color: var(--text-dim); }
+
+    /* Checkbox */
+    .cb-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    input[type="checkbox"] {
+      width: 17px; height: 17px;
+      accent-color: var(--green-glow);
+      cursor: pointer;
+    }
+
+    /* Dish name cell */
+    .dish-name {
+      font-weight: 500;
+    }
+
+    /* Dates badge */
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--green-soft);
+      border: 1px solid rgba(0,200,150,0.15);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      color: var(--green-glow);
+      white-space: nowrap;
+    }
+
+    .date-badge-zero {
+      background: rgba(255,255,255,0.04);
+      border-color: var(--border);
+      color: var(--text-dim);
+    }
+
+    /* Qty input */
+    .qty-input {
+      width: 64px;
+      padding: 7px 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-hl);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.88rem;
+      text-align: center;
+      outline: none;
+      transition: border-color var(--trans);
+    }
+    .qty-input:focus { border-color: var(--green-glow); }
+
+    /* Meal select */
+    .meal-select {
+      padding: 7px 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-hl);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+      transition: border-color var(--trans);
+    }
+    .meal-select:focus { border-color: var(--green-glow); }
+
+    /* Hidden inputs for dates */
+    .dates-hidden { display: none; }
+
+    /* ── Preview Table ───────────────────────────────────────────── */
+    .preview-count {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .preview-count strong { color: var(--green-glow); }
+
+    /* ── Progress Bar ────────────────────────────────────────────── */
+    .progress-wrap {
+      background: var(--bg-input);
+      border-radius: 20px;
+      height: 8px;
+      overflow: hidden;
+      margin: 20px 0 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00534a, var(--green-glow));
+      border-radius: 20px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid var(--border-hl);
+      border-top-color: var(--green-glow);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Result rows ─────────────────────────────────────────────── */
+    .result-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      animation: slideIn 0.25s ease both;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .result-ok {
+      background: var(--success-bg);
+      border: 1px solid rgba(40,167,69,0.2);
+    }
+    .result-fail {
+      background: var(--error-bg);
+      border: 1px solid rgba(220,53,69,0.2);
+    }
+
+    .result-icon { font-size: 1rem; flex-shrink: 0; }
+    .result-info { flex: 1; }
+    .result-dish { font-weight: 500; }
+    .result-detail { color: var(--text-muted); font-size: 0.78rem; }
+    .result-msg { font-size: 0.75rem; color: var(--text-dim); margin-left: auto; max-width: 200px; text-align: right; }
+
+    /* ── Summary Box ─────────────────────────────────────────────── */
+    .summary-box {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .summary-stat {
+      flex: 1;
+      min-width: 140px;
+      padding: 20px;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+
+    .summary-stat.ok {
+      background: var(--success-bg);
+      border: 1px solid rgba(40,167,69,0.2);
+    }
+    .summary-stat.fail {
+      background: var(--error-bg);
+      border: 1px solid rgba(220,53,69,0.2);
+    }
+
+    .summary-num {
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .ok .summary-num { color: var(--success); }
+    .fail .summary-num { color: var(--error); }
+
+    .summary-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Tooltip-like date list ──────────────────────────────────── */
+    .dates-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .date-chip {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .card { padding: 20px 16px; }
+      .login-card { padding: 32px 24px; }
+      td, th { padding: 10px 10px; }
+    }
+
+    /* ── Utility ─────────────────────────────────────────────────── */
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .flex { display: flex; }
+    .gap-10 { gap: 10px; }
+    .w-100 { width: 100%; }
+    .hidden { display: none; }
+    .text-muted { color: var(--text-muted); font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+
+{# ════════════════════════════════════════════════════════ LOGIN VIEW #}
+{% if view == 'login' %}
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-badge">🍽️</div>
+    <h1>Hostel Token Booker</h1>
+    <p class="subtitle">PSG Institute of Technology and Applied Research</p>
+
+    {% if error %}
+    <div class="error-box">
+      <span>⚠️</span>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/login" id="loginForm">
+      <div class="form-group">
+        <label for="rollno">Roll Number</label>
+        <input
+          type="text"
+          id="rollno"
+          name="rollno"
+          placeholder="e.g. 715525104209"
+          autocomplete="username"
+          inputmode="numeric"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Portal Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your portal password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary" id="loginBtn">
+        <span id="loginBtnText">Sign In & Load Tokens</span>
+      </button>
+    </form>
+
+    <p class="text-muted" style="text-align:center;margin-top:20px;">
+      Your credentials are never stored — only used for this session.
+    </p>
+  </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function() {
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  document.getElementById('loginBtnText').textContent = 'Signing in…';
+});
+</script>
+
+{# ════════════════════════════════════════════════════════ DASHBOARD VIEW #}
+{% elif view == 'dashboard' %}
+<div class="page">
+  <div class="container">
+
+    <div class="header">
+      <div class="logo-group">
+        <div class="logo-icon">🍽️</div>
+        <div class="logo-text">
+          <h1>Hostel Token Booker</h1>
+          <p>PSG iTech · Roll No: {{ rollno }}</p>
+        </div>
+      </div>
+      <a href="/logout" class="logout-btn">⏻ Logout</a>
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Select Dishes to Book</div>
+          <div class="section-subtitle">
+            Dates are scraped live from the portal. Set quantity to <strong>0</strong> to skip a dish.
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-ghost" id="setAllOneBtn" type="button">Set All to 1</button>
+          <button class="btn btn-ghost" id="setAllZeroBtn" type="button">Set All to 0</button>
+        </div>
+      </div>
+
+
+      <div class="dish-table-wrap" id="dishTable">
+        <table>
+            <thead>
+              <tr>
+                <th>Dish</th>
+                <th>Available Dates</th>
+                <th style="width:90px;">Qty (0=skip)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i, dish in dishes | enumerate %}
+              {% set has_dates = dish.dates | length > 0 %}
+              <tr class="dish-row {% if not has_dates %}disabled{% endif %}"
+                  id="row_{{ i }}"
+                  data-dish-name="{{ dish.name }}"
+                  data-dish-dates='{{ dish.dates | tojson }}'
+                  data-dish-meal="{{ dish.meal }}">
+                <td>
+                  <div class="dish-name">{{ dish.name }}</div>
+                </td>
+                <td>
+                  {% if has_dates %}
+                  <span class="date-badge">📅 {{ dish.dates | length }} date{% if dish.dates | length != 1 %}s{% endif %}</span>
+                  <div class="dates-list">
+                    {% for d in dish.dates %}
+                    <span class="date-chip">{{ d }}</span>
+                    {% endfor %}
+                  </div>
+                  {% else %}
+                  <span class="date-badge date-badge-zero">No dates this month</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <input
+                      type="number"
+                      name="dish_qty_{{ i }}"
+                      value="{% if has_dates %}1{% else %}0{% endif %}"
+                      min="0"
+                      max="10"
+                      class="qty-input"
+                      data-idx="{{ i }}"
+                      {% if not has_dates %}disabled{% endif %}
+                    />
+                    <span class="skip-badge hidden" id="skip_{{ i }}">SKIP</span>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <p class="text-muted" id="selectedCount"></p>
+          <button type="button" class="btn btn-primary" style="width:auto;" id="previewBtn" onclick="submitPreview()">
+            Preview Bookings &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.skip-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+</style>
+
+<script>
+function updateRow(idx, val) {
+  const qty = parseInt(val, 10);
+  const row  = document.getElementById('row_' + idx);
+  const skip = document.getElementById('skip_' + idx);
+  if (qty === 0) {
+    row.style.opacity = '0.35';
+    skip.classList.remove('hidden');
+  } else {
+    row.style.opacity = '';
+    skip.classList.add('hidden');
+  }
+  updateCount();
+}
+
+function updateCount() {
+  const inputs = document.querySelectorAll('.qty-input:not([disabled])');
+  let active = 0;
+  inputs.forEach(inp => { if (parseInt(inp.value, 10) > 0) active++; });
+  document.getElementById('selectedCount').textContent =
+    active + ' dish' + (active !== 1 ? 'es' : '') + ' will be booked';
+}
+
+document.getElementById('setAllOneBtn').addEventListener('click', () => {
+  document.querySelectorAll('.qty-input:not([disabled])').forEach(inp => {
+    inp.value = 1;
+    inp.dispatchEvent(new Event('input'));
+  });
+});
+
+document.getElementById('setAllZeroBtn').addEventListener('click', () => {
+  document.querySelectorAll('.qty-input:not([disabled])').forEach(inp => {
+    inp.value = 0;
+    inp.dispatchEvent(new Event('input'));
+  });
+});
+
+// Wire qty inputs via event delegation (avoids Jinja2-in-oninput linter warnings)
+document.getElementById('dishTable').addEventListener('input', function(e) {
+  if (e.target.classList.contains('qty-input')) {
+    updateRow(parseInt(e.target.dataset.idx, 10), e.target.value);
+  }
+});
+
+updateCount();
+
+document.getElementById('previewBtn').addEventListener('click', function() {
+  this.disabled = true;
+  this.textContent = 'Building preview…';
+});
+
+function submitPreview() {
+  const rows = document.querySelectorAll('#dishTable .dish-row');
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/preview';
+
+  function addField(name, value) {
+    const inp = document.createElement('input');
+    inp.type  = 'hidden';
+    inp.name  = name;
+    inp.value = value;
+    form.appendChild(inp);
+  }
+
+  let fieldIdx = 0; // sequential index used in form field names
+  rows.forEach(row => {
+    const qtyEl = row.querySelector('.qty-input');
+    const qty   = qtyEl ? parseInt(qtyEl.value, 10) || 0 : 0;
+    if (qty === 0) return; // skip this dish
+
+    addField(`dish_name_${fieldIdx}`,  row.dataset.dishName);
+    addField(`dish_dates_${fieldIdx}`, row.dataset.dishDates);
+    addField(`dish_meal_${fieldIdx}`,  row.dataset.dishMeal);
+    addField(`dish_qty_${fieldIdx}`,   qty);
+    fieldIdx++;
+  });
+
+  if (fieldIdx === 0) {
+    alert('Set at least one dish quantity to 1 or more to preview bookings.');
+    return;
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+}
+</script>
+
+{# ════════════════════════════════════════════════════════ PREVIEW VIEW #}
+{% elif view == 'preview' %}
+<div class="page">
+  <div class="container">
+
+    <div class="header">
+      <div class="logo-group">
+        <div class="logo-icon">🍽️</div>
+        <div class="logo-text">
+          <h1>Hostel Token Booker</h1>
+          <p>PSG iTech · Roll No: 715525104209</p>
+        </div>
+      </div>
+      <a href="/logout" class="logout-btn">⏻ Logout</a>
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Booking Preview</div>
+          <div class="section-subtitle">Review all individual token bookings before confirming.</div>
+        </div>
+        <a href="/dashboard" class="btn btn-ghost">← Back</a>
+      </div>
+
+      {% if bookings %}
+      <p class="preview-count">
+        <strong>{{ bookings | length }}</strong> booking{{ 's' if bookings | length != 1 else '' }} ready to submit
+      </p>
+
+      <div class="dish-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Dish</th>
+              <th>Date</th>
+              <th>Meal</th>
+              <th>Qty</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in bookings %}
+            <tr>
+              <td style="color:var(--text-dim);">{{ loop.index }}</td>
+              <td class="dish-name">{{ b.name }}</td>
+              <td>
+                <span class="date-chip" style="font-size:0.82rem;">{{ b.date }}</span>
+              </td>
+              <td>
+                {% if b.meal == 'Breakfast' %}🌅{% elif b.meal == 'Lunch' %}☀️{% else %}🌙{% endif %}
+                {{ b.meal }}
+              </td>
+              <td>{{ b.qty }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Store bookings as JSON for the SSE booking call -->
+      <script>
+        const BOOKING_JSON_DATA = {{ bookings | tojson }};
+      </script>
+
+      <div style="display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;" class="mt-16">
+        <a href="/dashboard" class="btn btn-secondary">← Edit Selection</a>
+        <button class="btn btn-success" id="confirmBtn" onclick="startBooking()">
+          🚀 Confirm &amp; Book All
+        </button>
+      </div>
+
+      <!-- Booking progress section (hidden until booking starts) -->
+      <div id="bookingSection" class="hidden mt-24">
+        <div class="section-title" style="margin-bottom:12px;">Booking in Progress</div>
+
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-label">
+          <span id="progressText">Starting…</span>
+          <span id="progressFrac">0 / {{ bookings | length }}</span>
+        </div>
+
+        <div id="resultsList"></div>
+      </div>
+
+      <!-- Summary (hidden until done) -->
+      <div id="summarySection" class="hidden mt-24">
+        <div class="section-title" style="margin-bottom:16px;">Booking Complete</div>
+        <div class="summary-box">
+          <div class="summary-stat ok">
+            <div class="summary-num" id="summaryOk">0</div>
+            <div class="summary-label">✅ Booked Successfully</div>
+          </div>
+          <div class="summary-stat fail">
+            <div class="summary-num" id="summaryFail">0</div>
+            <div class="summary-label">❌ Failed</div>
+          </div>
+        </div>
+        <div class="mt-16" style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="/dashboard" class="btn btn-secondary">Book More</a>
+          <a href="/logout" class="btn btn-ghost">Logout</a>
+        </div>
+      </div>
+
+      {% else %}
+      <div style="text-align:center;padding:40px 0;color:var(--text-muted);">
+        <p style="font-size:2rem;margin-bottom:12px;">🫙</p>
+        <p>No dishes were selected. <a href="/dashboard" style="color:var(--green-glow);">Go back</a> and check at least one dish.</p>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<script>
+{% if bookings %}
+const TOTAL = {{ bookings | length }};
+
+async function startBooking() {
+  document.getElementById('confirmBtn').disabled = true;
+  document.getElementById('confirmBtn').textContent = '⏳ Booking…';
+  document.getElementById('bookingSection').classList.remove('hidden');
+  document.getElementById('bookingSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const response = await fetch('/book', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(BOOKING_JSON_DATA),
+  });
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let done_count = 0;
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+
+    // SSE lines: "data: {...}\n\n"
+    const events = buffer.split('\n\n');
+    buffer = events.pop(); // keep incomplete chunk
+
+    for (const event of events) {
+      const line = event.trim();
+      if (!line.startsWith('data:')) continue;
+      const jsonStr = line.slice(5).trim();
+      let obj;
+      try { obj = JSON.parse(jsonStr); } catch(e) { continue; }
+
+      if (obj.done) {
+        // Final summary
+        document.getElementById('progressText').textContent = 'All done!';
+        document.getElementById('summaryOk').textContent = obj.success;
+        document.getElementById('summaryFail').textContent = obj.failed;
+        document.getElementById('summarySection').classList.remove('hidden');
+        document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (obj.error) {
+        // Fatal error from server (e.g. Playwright crash)
+        const div = document.createElement('div');
+        div.className = 'result-row result-fail';
+        div.style.gridColumn = '1 / -1';
+        div.innerHTML = `<span class="result-icon">⚠️</span><div class="result-info"><div class="result-dish">Booking engine error</div><div class="result-detail">${escHtml(obj.error)}</div></div>`;
+        document.getElementById('resultsList').appendChild(div);
+        document.getElementById('progressText').textContent = 'Error — see details below';
+      } else {
+        done_count++;
+        const pct = Math.round((done_count / TOTAL) * 100);
+        document.getElementById('progressBar').style.width = pct + '%';
+        document.getElementById('progressText').textContent =
+          obj.ok ? '✅ Booked ' + obj.dish : '❌ Failed ' + obj.dish;
+        document.getElementById('progressFrac').textContent = done_count + ' / ' + TOTAL;
+
+        // Add result row
+        const div = document.createElement('div');
+        div.className = 'result-row ' + (obj.ok ? 'result-ok' : 'result-fail');
+        div.innerHTML = `
+          <span class="result-icon">${obj.ok ? '✅' : '❌'}</span>
+          <div class="result-info">
+            <div class="result-dish">${escHtml(obj.dish)}</div>
+            <div class="result-detail">${escHtml(obj.date)} · ${escHtml(obj.meal)} · qty ${obj.qty}</div>
+          </div>
+          <span class="result-msg" title="${escHtml(obj.msg)}">${escHtml(obj.msg.substring(0, 60))}</span>
+        `;
+        document.getElementById('resultsList').appendChild(div);
+      }
+    }
+  }
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+{% endif %}
+</script>
+
+{% endif %}
+
+</body>
+</html>
