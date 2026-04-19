@@ -187,7 +187,14 @@ def scrape_dishes(s):
                     dates.append(val)
 
         print(f"[SCRAPE] {dish_name} → token_id={token_id}, has_tokens={has_tokens}, dates={dates}")
-        dishes.append({"name": dish_name, "token_id": token_id, "dates": dates, "has_tokens": has_tokens})
+        meal_info = DISH_SCHEDULE.get(dish_name, {})
+        dishes.append({
+            "name": dish_name, 
+            "token_id": token_id, 
+            "dates": dates, 
+            "has_tokens": has_tokens,
+            "meal": meal_info.get("meal", "Lunch")
+        })
     return dishes
 
 # ─── Routes ───────────────────────────────────────────────────────────────────

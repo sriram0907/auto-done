@@ -9,63 +9,145 @@
     content="Automate hostel food token booking at PSG iTech — select dishes, preview, and confirm in seconds." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset & Tokens ─────────────────────────────────────────── */
-    *,
-    *::before,
-    *::after {
+    /* ── Reset & Modern Tokens ─────────────────────────────────────────── */
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
     :root {
-      --bg: #080f0e;
-      --bg-card: #0d1e1b;
-      --bg-card2: #112420;
-      --bg-input: #0a1917;
-      --border: rgba(255, 255, 255, 0.07);
-      --border-hl: rgba(255, 255, 255, 0.18);
-      --green-deep: #002420;
-      --green-mid: #00382f;
-      --green-glow: #00c896;
-      --green-soft: rgba(0, 200, 150, 0.08);
-      --text: #e8f5f2;
-      --text-muted: #6b9990;
-      --text-dim: #3d6860;
-      --success: #28a745;
-      --success-bg: rgba(40, 167, 69, 0.12);
-      --error: #dc3545;
-      --error-bg: rgba(220, 53, 69, 0.12);
-      --warning: #f0a500;
-      --radius: 12px;
-      --radius-sm: 7px;
-      --trans: 0.2s ease;
+      --bg-gradient: linear-gradient(135deg, #0a1628 0%, #0d2137 50%, #0a1628 100%);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --glass-blur: blur(20px);
+      
+      --primary: linear-gradient(135deg, #00c853 0%, #00897b 100%);
+      --primary-glow: rgba(0, 200, 83, 0.4);
+      --secondary: rgba(255, 255, 255, 0.1);
+      
+      --text: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --text-dim: rgba(255, 255, 255, 0.4);
+      
+      --success: #00e676;
+      --error: #ff5252;
+      --warning: #ffd740;
+
+      --bf-grad: linear-gradient(135deg, #ff9100 0%, #ff6d00 100%);
+      --lunch-grad: linear-gradient(135deg, #ffd600 0%, #ffab00 100%);
+      --dinner-grad: linear-gradient(135deg, #7c4dff 0%, #651fff 100%);
+      
+      --radius: 20px;
+      --radius-sm: 12px;
+      --trans: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html,
-    body {
+    html, body {
       height: 100%;
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-gradient);
       color: var(--text);
       line-height: 1.6;
+      overflow-x: hidden;
+      background-attachment: fixed;
     }
 
-    /* ── Scrollbar ───────────────────────────────────────────────── */
-    ::-webkit-scrollbar {
-      width: 6px;
+    /* ── Floating Particles Background ─────────────────────────── */
+    .bg-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
     }
 
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 20s linear infinite;
     }
 
-    ::-webkit-scrollbar-thumb {
-      background: var(--green-mid);
-      border-radius: 3px;
+    @keyframes float {
+      from { transform: translateY(100vh) scale(1); opacity: 0; }
+      20% { opacity: 0.2; }
+      80% { opacity: 0.2; }
+      to { transform: translateY(-100px) scale(0.5); opacity: 0; }
     }
+
+    /* ── Animations ────────────────────────────────────────────── */
+    @keyframes fadeInSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes rowEntry {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes successGlow {
+      from { box-shadow: 0 0 0 rgba(0, 230, 118, 0); transform: translateX(-10px); opacity: 0; }
+      to { box-shadow: 0 0 15px rgba(0, 230, 118, 0.3); transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes errorGlow {
+      from { box-shadow: 0 0 0 rgba(255, 82, 82, 0); transform: translateX(-10px); opacity: 0; }
+      to { box-shadow: 0 0 15px rgba(255, 82, 82, 0.3); transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 200, 83, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0); }
+    }
+
+    .skipped {
+      opacity: 0.35 !important;
+      transition: opacity 0.3s ease;
+    }
+    .skipped {
+      opacity: 0.35 !important;
+      transition: opacity 0.3s ease;
+    }
+    .skipped .dish-name {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    .skipped input {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7); }
+      70%  { box-shadow: 0 0 0 10px rgba(0, 200, 83, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0); }
+    }
+
+    @keyframes rocketBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Hide default browser number-input spinners */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] { -moz-appearance: textfield; }
 
     /* ── Layout ─────────────────────────────────────────────────── */
     .page {
@@ -73,212 +155,42 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 16px 80px;
+      padding: 60px 20px 100px;
+      animation: fadeInSlideUp 0.8s ease-out;
     }
 
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 1000px;
     }
 
-    /* ── Header ─────────────────────────────────────────────────── */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 36px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
+    /* ── Glass Components ───────────────────────────────────────── */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: var(--radius);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .logo-group {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .logo-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, var(--green-mid), #004d40);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 0 20px rgba(0, 200, 150, 0.15);
-    }
-
-    .logo-text h1 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: var(--text);
-    }
-
-    .logo-text p {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-
-    .logout-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 16px;
-      border: 1px solid var(--border-hl);
+    .glass-input {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: var(--radius-sm);
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 0.82rem;
+      padding: 14px 18px;
+      color: #fff;
       font-family: inherit;
-      cursor: pointer;
-      text-decoration: none;
       transition: all var(--trans);
     }
 
-    .logout-btn:hover {
-      background: var(--error-bg);
-      border-color: var(--error);
-      color: var(--error);
-    }
-
-    /* ── Card ───────────────────────────────────────────────────── */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-    }
-
-    /* ── Login Page ─────────────────────────────────────────────── */
-    .login-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        radial-gradient(ellipse at 20% 50%, rgba(0, 56, 47, 0.35) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(0, 36, 32, 0.5) 0%, transparent 55%),
-        var(--bg);
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 420px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-hl);
-      border-radius: 16px;
-      padding: 44px 40px;
-      box-shadow:
-        0 0 60px rgba(0, 200, 150, 0.05),
-        0 24px 64px rgba(0, 0, 0, 0.5);
-      animation: fadeUp 0.4s ease both;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .login-badge {
-      width: 56px;
-      height: 56px;
-      margin: 0 auto 20px;
-      background: linear-gradient(135deg, #002420, #00534a);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      box-shadow: 0 0 30px rgba(0, 200, 150, 0.2);
-    }
-
-    .login-card h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 6px;
-    }
-
-    .login-card .subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.83rem;
-      margin-bottom: 32px;
-    }
-
-    .roll-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--green-soft);
-      border: 1px solid rgba(0, 200, 150, 0.2);
-      border-radius: 20px;
-      padding: 3px 12px;
-      font-size: 0.78rem;
-      color: var(--green-glow);
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .form-group input[type="password"],
-    .form-group input[type="number"],
-    .form-group select {
-      width: 100%;
-      padding: 11px 14px;
-      background: var(--bg-input);
-      border: 1px solid var(--border-hl);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.95rem;
+    .glass-input:focus {
       outline: none;
-      transition: border-color var(--trans), box-shadow var(--trans);
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--green-glow);
-      box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
-    }
-
-    .form-group select {
-      cursor: pointer;
-    }
-
-    .error-box {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      background: var(--error-bg);
-      border: 1px solid rgba(220, 53, 69, 0.3);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      font-size: 0.85rem;
-      color: #ff8086;
-      margin-bottom: 20px;
+      border-color: #00e676;
+      box-shadow: 0 0 15px rgba(0, 230, 118, 0.2);
+      background: rgba(255, 255, 255, 0.12);
     }
 
     /* ── Buttons ────────────────────────────────────────────────── */
@@ -286,475 +198,258 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 12px 24px;
-      border: none;
+      padding: 14px 28px;
       border-radius: var(--radius-sm);
       font-family: inherit;
-      font-size: 0.9rem;
       font-weight: 600;
-      cursor: pointer;
+      letter-spacing: 0.5px;
       transition: all var(--trans);
       text-decoration: none;
+      cursor: pointer;
+      border: none;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #00534a, #002420);
-      color: var(--text);
-      width: 100%;
-      box-shadow: 0 4px 16px rgba(0, 83, 74, 0.4);
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 10px 20px var(--primary-glow);
     }
 
     .btn-primary:hover {
-      background: linear-gradient(135deg, #00645a, #002f28);
-      box-shadow: 0 6px 20px rgba(0, 200, 150, 0.25);
-      transform: translateY(-1px);
+      transform: scale(1.02);
+      box-shadow: 0 15px 30px var(--primary-glow);
+      filter: brightness(1.1);
     }
 
-    .btn-primary:active {
-      transform: translateY(0);
-    }
+    .btn-primary:active { transform: scale(0.98); }
 
     .btn-secondary {
-      background: var(--bg-card2);
-      border: 1px solid var(--border-hl);
-      color: var(--text);
+      background: var(--secondary);
+      color: #fff;
+      border: 1px solid var(--glass-border);
     }
 
     .btn-secondary:hover {
-      background: var(--bg-card);
-      border-color: var(--green-glow);
-      color: var(--green-glow);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
-    .btn-success {
-      background: linear-gradient(135deg, #1a7a30, #0f5a22);
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
-    }
-
-    .btn-success:hover {
-      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.45);
-      transform: translateY(-1px);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 8px 16px;
-      font-size: 0.82rem;
-    }
-
-    .btn-ghost:hover {
-      border-color: var(--border-hl);
-      color: var(--text);
-      background: var(--bg-card2);
-    }
-
-    .btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    /* ── Section title ──────────────────────────────────────────── */
-    .section-header {
+    /* ── Header Redesign ───────────────────────────────────────── */
+    .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
 
-    .section-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-    }
+    .logo-group { display: flex; align-items: center; gap: 20px; }
 
-    .section-subtitle {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
-    .action-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    /* ── Dish Table ─────────────────────────────────────────────── */
-    .dish-table-wrap {
-      overflow-x: auto;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      margin-bottom: 24px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    thead tr {
-      background: var(--bg-card2);
-      border-bottom: 1px solid var(--border);
-    }
-
-    th {
-      padding: 12px 16px;
-      text-align: left;
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background var(--trans);
-    }
-
-    tbody tr:last-child {
-      border-bottom: none;
-    }
-
-    tbody tr:hover {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    td {
-      padding: 14px 16px;
-      font-size: 0.88rem;
-      vertical-align: middle;
-    }
-
-    /* Disabled (no dates) rows */
-    .dish-row.disabled {
-      opacity: 0.38;
-    }
-
-    .dish-row.disabled td {
-      color: var(--text-dim);
-    }
-
-    /* Checkbox */
-    .cb-wrap {
+    .logo-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--primary);
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 0 25px var(--primary-glow);
+      animation: slowRotate 15s linear infinite;
     }
 
-    input[type="checkbox"] {
-      width: 17px;
-      height: 17px;
-      accent-color: var(--green-glow);
-      cursor: pointer;
+    @keyframes slowRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    /* Dish name cell */
-    .dish-name {
-      font-weight: 500;
+    /* ── Table Styling ─────────────────────────────────────────── */
+    .table-container {
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.2);
     }
 
-    /* Dates badge */
-    .date-badge {
+    table { width: 100%; border-collapse: collapse; }
+
+    th {
+      padding: 16px 24px;
+      text-align: left;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    td { padding: 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+
+    tr:hover { background: rgba(255, 255, 255, 0.03); }
+
+    tr { animation: rowEntry 0.5s ease backwards; }
+
+    /* ── Badges & Pills ────────────────────────────────────────── */
+    .pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      background: var(--green-soft);
-      border: 1px solid rgba(0, 200, 150, 0.15);
-      border-radius: 20px;
-      padding: 3px 10px;
+      padding: 6px 14px;
+      border-radius: 30px;
       font-size: 0.75rem;
-      color: var(--green-glow);
-      white-space: nowrap;
+      font-weight: 600;
+      gap: 6px;
     }
 
-    .date-badge-zero {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: var(--border);
-      color: var(--text-dim);
-    }
+    .pill-bf { background: var(--bf-grad); color: #fff; box-shadow: 0 4px 10px rgba(255, 145, 0, 0.3); }
+    .pill-lunch { background: var(--lunch-grad); color: #fff; box-shadow: 0 4px 10px rgba(255, 214, 0, 0.3); }
+    .pill-dinner { background: var(--dinner-grad); color: #fff; box-shadow: 0 4px 10px rgba(124, 77, 255, 0.3); }
 
-    /* Qty input */
-    .qty-input {
-      width: 64px;
-      padding: 7px 10px;
-      background: var(--bg-input);
-      border: 1px solid var(--border-hl);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.88rem;
-      text-align: center;
-      outline: none;
-      transition: border-color var(--trans);
-    }
-
-    .qty-input:focus {
-      border-color: var(--green-glow);
-    }
-
-    /* Meal select */
-    .meal-select {
-      padding: 7px 10px;
-      background: var(--bg-input);
-      border: 1px solid var(--border-hl);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.85rem;
-      outline: none;
-      cursor: pointer;
-      transition: border-color var(--trans);
-    }
-
-    .meal-select:focus {
-      border-color: var(--green-glow);
-    }
-
-    /* Hidden inputs for dates */
-    .dates-hidden {
-      display: none;
-    }
-
-    /* ── Preview Table ───────────────────────────────────────────── */
-    .preview-count {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    .preview-count strong {
-      color: var(--green-glow);
-    }
-
-    /* ── Progress Bar ────────────────────────────────────────────── */
-    .progress-wrap {
-      background: var(--bg-input);
+    .date-badge {
+      background: rgba(0, 230, 118, 0.15);
+      border: 1px solid rgba(0, 230, 118, 0.2);
+      color: #00e676;
+      padding: 4px 12px;
       border-radius: 20px;
-      height: 8px;
+      font-size: 0.75rem;
+      display: inline-block;
+      margin: 2px;
+    }
+
+    /* ── Progress Indicators ────────────────────────────────────── */
+    .progress-wrap {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
       overflow: hidden;
-      margin: 20px 0 10px;
+      position: relative;
     }
 
     .progress-bar {
       height: 100%;
+      background: var(--primary);
       width: 0%;
-      background: linear-gradient(90deg, #00534a, var(--green-glow));
-      border-radius: 20px;
-      transition: width 0.3s ease;
+      transition: width 0.5s ease;
+      position: relative;
     }
 
-    .progress-label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 16px;
+    .progress-shimmer {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 1.5s infinite;
+    }
+
+    .pulse-dot {
+      width: 12px; height: 12px;
+      background: #00e676;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00e676;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 230, 118, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
+    }
+
+    /* ── Results Display ────────────────────────────────────────── */
+    .result-row {
+      margin-bottom: 12px;
+      padding: 16px 20px;
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 15px;
     }
 
-    .spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid var(--border-hl);
-      border-top-color: var(--green-glow);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
+    .res-ok { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.2); animation: successGlow 0.5s ease both; }
+    .res-fail { background: rgba(255, 82, 82, 0.1); border: 1px solid rgba(255, 82, 82, 0.2); animation: errorGlow 0.5s ease both; }
+
+    /* ── Confetti ─────────────────────────────────────────────── */
+    .confetti {
+      position: fixed; top: -10px; width: 10px; height: 10px; animation: confettiDrop 3s linear forwards;
+    }
+    @keyframes confettiDrop { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    footer {
+      padding: 60px 20px;
+      text-align: center;
+      opacity: 0.4;
+      font-size: 0.8rem;
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+    .heart { display: inline-block; color: #ff5252; animation: heartBeat 1.2s infinite; }
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      15% { transform: scale(1.3); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.3); }
+      70% { transform: scale(1); }
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
     }
 
-    /* ── Result rows ─────────────────────────────────────────────── */
+    /* ── Result Rows ─────────────────────────────────────────────*/
     .result-row {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      margin-bottom: 6px;
-      font-size: 0.85rem;
-      animation: slideIn 0.25s ease both;
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(-10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    .result-ok {
-      background: var(--success-bg);
-      border: 1px solid rgba(40, 167, 69, 0.2);
-    }
-
-    .result-fail {
-      background: var(--error-bg);
-      border: 1px solid rgba(220, 53, 69, 0.2);
-    }
-
-    .result-icon {
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    .result-info {
-      flex: 1;
-    }
-
-    .result-dish {
-      font-weight: 500;
-    }
-
-    .result-detail {
-      color: var(--text-muted);
-      font-size: 0.78rem;
-    }
-
-    .result-msg {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      margin-left: auto;
-      max-width: 200px;
-      text-align: right;
-    }
-
-    /* ── Summary Box ─────────────────────────────────────────────── */
-    .summary-box {
-      display: flex;
+      justify-content: space-between;
       gap: 16px;
-      margin-top: 24px;
-      flex-wrap: wrap;
+      padding: 16px 20px;
+      margin-bottom: 8px;
+      border-radius: 12px;
+      animation: slideInLeft 0.3s ease-out;
     }
+    .result-row .result-icon { flex-shrink: 0; font-size: 1.2rem; }
+    .result-row .result-info { flex: 1; min-width: 0; }
+    .result-row .result-dish { font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .result-row .result-detail { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .result-row .result-msg { flex-shrink: 0; font-size: 0.8rem; font-weight: 600; text-align: right; white-space: nowrap; }
+    .res-ok  { background: rgba(0,200,83,0.12); border: 1px solid rgba(0,200,83,0.25); }
+    .res-ok  .result-msg { color: #00e676; }
+    .res-fail{ background: rgba(255,82,82,0.12); border: 1px solid rgba(255,82,82,0.25); }
+    .res-fail .result-msg { color: #ff5252; }
 
-    .summary-stat {
-      flex: 1;
-      min-width: 140px;
-      padding: 20px;
-      border-radius: var(--radius);
-      text-align: center;
+    /* ── Login Logic Specifics ─────────────────────────────────── */
+    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-card { width: 100%; max-width: 440px; }
+    .login-title { text-align: center; margin-bottom: 40px; }
+    .login-title h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
+
+    .form-group { margin-bottom: 25px; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 10px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .glass-card { padding: 25px; }
+      .header { flex-direction: column; text-align: center; gap: 20px; }
     }
-
-    .summary-stat.ok {
-      background: var(--success-bg);
-      border: 1px solid rgba(40, 167, 69, 0.2);
-    }
-
-    .summary-stat.fail {
-      background: var(--error-bg);
-      border: 1px solid rgba(220, 53, 69, 0.2);
-    }
-
-    .summary-num {
-      font-size: 2.4rem;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .ok .summary-num {
-      color: var(--success);
-    }
-
-    .fail .summary-num {
-      color: var(--error);
-    }
-
-    .summary-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    /* ── Tooltip-like date list ──────────────────────────────────── */
-    .dates-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 6px;
-    }
-
-    .date-chip {
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 2px 7px;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    /* ── Responsive ─────────────────────────────────────────────── */
-    @media (max-width: 600px) {
-      .card {
-        padding: 20px 16px;
-      }
-
-      .login-card {
-        padding: 32px 24px;
-      }
-
-      td,
-      th {
-        padding: 10px 10px;
-      }
-    }
-
-    /* ── Utility ─────────────────────────────────────────────────── */
-    .mt-16 {
-      margin-top: 16px;
-    }
-
-    .mt-24 {
-      margin-top: 24px;
-    }
-
-    .flex {
-      display: flex;
-    }
-
-    .gap-10 {
-      gap: 10px;
-    }
-
-    .w-100 {
-      width: 100%;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .text-muted {
-      color: var(--text-muted);
-      font-size: 0.82rem;
-    }
+    
+    .hidden { display: none !important; }
   </style>
 </head>
 
 <body>
+  <div class="bg-particles" id="particles"></div>
+
 
   {# ════════════════════════════════════════════════════════ LOGIN VIEW #}
   {% if view == 'login' %}
   <div class="login-wrap">
-    <div class="login-card">
-      <div class="login-badge">🍽️</div>
-      <h1>Hostel Token Booker</h1>
-      <p class="subtitle">PSG Institute of Technology and Applied Research</p>
+    <div class="glass-card login-card">
+      <div class="login-title">
+        <div class="logo-icon" style="margin: 0 auto 20px;">🍽️</div>
+        <h1>Hostel Token Booker</h1>
+        <p class="subtitle">PSG Institute of Technology and Applied Research</p>
+      </div>
 
       {% if error %}
       <div class="error-box">
@@ -766,18 +461,21 @@
       <form method="POST" action="/login" id="loginForm">
         <div class="form-group">
           <label for="rollno">Roll Number</label>
-          <input type="text" id="rollno" name="rollno" placeholder="Enter your roll number" autocomplete="username"
-            inputmode="numeric" required />
+          <input type="text" id="rollno" name="rollno" class="glass-input" placeholder="Enter your roll number" autocomplete="username"
+            inputmode="numeric" required style="width:100%;" />
         </div>
         <div class="form-group">
           <label for="password">Portal Password</label>
           <div style="position:relative;">
-            <input type="password" id="password" name="password" placeholder="Enter your portal password"
+            <input type="password" id="password" name="password" class="glass-input" placeholder="Enter your portal password"
               autocomplete="current-password" required
-              style="padding-right:44px;border-color:var(--border-hl);background:var(--bg-card2);" />
+              style="width:100%; padding-right:44px;" />
             <button type="button" id="eyeBtn" onclick="togglePassword()"
-              style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;
-                     cursor:pointer;color:var(--text-muted);padding:4px;line-height:0;" aria-label="Toggle password">
+              style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;
+                     cursor:pointer;color:#666;padding:4px;line-height:0;transition:color 0.2s;"
+              onmouseover="this.style.color='#00c853'"
+              onmouseout="this.style.color='#666'"
+              aria-label="Toggle password">
               <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -786,18 +484,32 @@
             </button>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" id="loginBtn">
-          <span id="loginBtnText">Sign In &amp; Load Tokens</span>
+        <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%;">
+          <span id="loginBtnText">Sign In &amp; Load Tokens &rarr;</span>
         </button>
       </form>
 
-      <p class="text-muted" style="text-align:center;margin-top:20px;">
+      <p class="text-muted" style="text-align:center;margin-top:25px;font-size:0.75rem;">
         Your credentials are never stored — only used for this session.
       </p>
     </div>
   </div>
 
   <script>
+    // Generate background particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 15 + 5 + 'px';
+      p.style.width = size;
+      p.style.height = size;
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = Math.random() * 10 + 10 + 's';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      container.appendChild(p);
+    }
+
     document.getElementById('loginForm').addEventListener('submit', function () {
       const btn = document.getElementById('loginBtn');
       btn.disabled = true;
@@ -829,13 +541,13 @@
           <div class="logo-icon">🍽️</div>
           <div class="logo-text">
             <h1>Hostel Token Booker</h1>
-            <p>PSG iTech · Roll No: {{ rollno }}</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">PSG iTech · Roll No: {{ rollno }}</p>
           </div>
         </div>
-        <a href="/logout" class="logout-btn">⏻ Logout</a>
+        <a href="/logout" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">⏻ Logout</a>
       </div>
 
-      <div class="card">
+      <div class="glass-card">
         <div class="section-header">
           <div>
             <div class="section-title">Select Dishes to Book</div>
@@ -844,20 +556,60 @@
               Dishes marked <em>No tokens</em> are not available this cycle.
             </div>
           </div>
-          <div class="action-row">
-            <button class="btn btn-ghost" id="setAllOneBtn" type="button">Set All to 1</button>
-            <button class="btn btn-ghost" id="setAllZeroBtn" type="button">Set All to 0</button>
+          <!-- Quick Select Buttons -->
+          <div style="display: flex; gap: 12px; margin: 16px 0 12px 0; align-items: center;">
+            <span style="color: rgba(255,255,255,0.5); font-size: 13px; letter-spacing: 0.5px;">Quick select:</span>
+            
+            <button onclick="setAllQty(1)" style="
+                background: var(--primary);
+                color: white;
+                border: none;
+                padding: 8px 18px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                letter-spacing: 0.5px;
+                box-shadow: 0 4px 15px var(--primary-glow);
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            " onmouseover="this.style.transform='scale(1.05)'" 
+               onmouseout="this.style.transform='scale(1)'">
+                ✅ Set All to 1
+            </button>
+            
+            <button onclick="setAllQty(0)" style="
+                background: rgba(255,255,255,0.08);
+                color: rgba(255,255,255,0.7);
+                border: 1px solid rgba(255,255,255,0.15);
+                padding: 8px 18px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                letter-spacing: 0.5px;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            " onmouseover="this.style.background='rgba(255,255,255,0.12)'"
+               onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+                ⬜ Set All to 0
+            </button>
           </div>
-        </div>
+          
+          <p id="bookingCount" style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0 0 20px 0;">0 dishes selected for booking</p>
 
 
-        <div class="dish-table-wrap" id="dishTable">
+        <div class="table-container" id="dishTable">
           <table>
             <thead>
               <tr>
                 <th>Dish</th>
                 <th>Available Dates</th>
-                <th style="width:90px;">Qty (0=skip)</th>
+                <th style="width:110px;">Qty (0=skip)</th>
               </tr>
             </thead>
             <tbody>
@@ -865,32 +617,39 @@
               {% set has_dates = dish.dates | length > 0 %}
               {% set bookable = has_dates and dish.has_tokens %}
               <tr class="dish-row {% if not bookable %}disabled{% endif %}" id="row_{{ i }}"
-                data-dish-name="{{ dish.name }}" data-dish-dates='{{ dish.dates | tojson }}'>
+                data-dish-name="{{ dish.name }}" 
+                data-dish-dates='{{ dish.dates | tojson }}'
+                data-dish-meal="{{ dish.meal }}"
+                style="animation-delay: {{ loop.index0 * 0.05 }}s;">
                 <td>
-                  <div class="dish-name">{{ dish.name }}</div>
+                  <div class="dish-name" style="font-size: 1rem; color: #fff;">{{ dish.name }}</div>
                   {% if not dish.has_tokens %}
-                  <div style="font-size:0.72rem;color:var(--text-dim);margin-top:2px;">No tokens this cycle</div>
+                  <div style="font-size:0.75rem;color:var(--text-dim);margin-top:4px;">No tokens this cycle</div>
                   {% endif %}
                 </td>
                 <td>
                   {% if has_dates and dish.has_tokens %}
-                  <span class="date-badge">📅 {{ dish.dates | length }} date{% if dish.dates | length != 1 %}s{% endif
-                    %}</span>
                   <div class="dates-list">
                     {% for d in dish.dates %}
-                    <span class="date-chip">{{ d }}</span>
+                    <span class="date-badge">{{ d }}</span>
                     {% endfor %}
                   </div>
                   {% elif not dish.has_tokens %}
-                  <span class="date-badge date-badge-zero">No tokens</span>
+                  <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No tokens</span>
                   {% else %}
-                  <span class="date-badge date-badge-zero">No dates this month</span>
+                  <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No dates available</span>
                   {% endif %}
                 </td>
                 <td>
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <input type="number" name="dish_qty_{{ i }}" value="{% if bookable %}1{% else %}0{% endif %}"
-                      min="0" max="10" class="qty-input" data-idx="{{ i }}" {% if not bookable %}disabled{% endif %} />
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="display:flex;align-items:center;gap:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:4px 8px;">
+                      <button onclick="changeQty(this,-1)" {% if not bookable %}disabled{% endif %} style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(255,255,255,0.1);color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;" onmouseover="if(!this.disabled)this.style.background='rgba(255,255,255,0.2)'" onmouseout="if(!this.disabled)this.style.background='rgba(255,255,255,0.1)'">−</button>
+                      <input type="number" name="dish_qty_{{ i }}" value="{% if bookable %}1{% else %}0{% endif %}"
+                        min="0" max="10" class="qty-input" data-idx="{{ i }}" {% if not bookable %}disabled{% endif %}
+                        oninput="updateRowState(this)"
+                        style="width:36px;text-align:center;background:transparent;border:none;color:white;font-size:16px;font-weight:600;outline:none;-moz-appearance:textfield;" />
+                      <button onclick="changeQty(this,1)" {% if not bookable %}disabled{% endif %} style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(0,200,83,0.2);color:#00c853;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;" onmouseover="if(!this.disabled)this.style.background='rgba(0,200,83,0.35)'" onmouseout="if(!this.disabled)this.style.background='rgba(0,200,83,0.2)'">+</button>
+                    </div>
                     <span class="skip-badge hidden" id="skip_{{ i }}">SKIP</span>
                   </div>
                 </td>
@@ -923,53 +682,60 @@
       border-radius: 4px;
       padding: 2px 6px;
     }
+    .dish-row.skipped { opacity: 0.35; }
   </style>
 
   <script>
-    function updateRow(idx, val) {
-      const qty = parseInt(val, 10);
-      const row = document.getElementById('row_' + idx);
-      const skip = document.getElementById('skip_' + idx);
+    function updateRowState(input) {
+      const row = input.closest('[data-dish-name]');
+      if (!row) return;
+      const qty = parseInt(input.value) || 0;
+      const skip = row.querySelector('.skip-badge');
       if (qty === 0) {
-        row.style.opacity = '0.35';
-        skip.classList.remove('hidden');
+        row.classList.add('skipped');
+        if (skip) skip.classList.remove('hidden');
       } else {
-        row.style.opacity = '';
-        skip.classList.add('hidden');
+        row.classList.remove('skipped');
+        if (skip) skip.classList.add('hidden');
       }
-      updateCount();
+      updateBookingCount();
     }
 
-    function updateCount() {
-      const inputs = document.querySelectorAll('.qty-input:not([disabled])');
-      let active = 0;
-      inputs.forEach(inp => { if (parseInt(inp.value, 10) > 0) active++; });
-      document.getElementById('selectedCount').textContent =
-        active + ' dish' + (active !== 1 ? 'es' : '') + ' will be booked';
+    function setAllQty(val) {
+      document.querySelectorAll('[data-dish-name]').forEach(row => {
+        const dates = JSON.parse(row.dataset.dishDates || '[]');
+        if (dates.length > 0) {
+          const input = row.querySelector('input[type=number]');
+          if (input && !input.disabled) {
+            input.value = val;
+            updateRowState(input);
+          }
+        }
+      });
+      updateBookingCount();
     }
 
-    document.getElementById('setAllOneBtn').addEventListener('click', () => {
-      document.querySelectorAll('.qty-input:not([disabled])').forEach(inp => {
-        inp.value = 1;
-        inp.dispatchEvent(new Event('input'));
+    function updateBookingCount() {
+      let count = 0;
+      document.querySelectorAll('[data-dish-name]').forEach(row => {
+        const qty = parseInt(row.querySelector('input[type=number]')?.value) || 0;
+        if (qty > 0) count++;
       });
-    });
+      const el = document.getElementById('bookingCount');
+      if (el) el.textContent = count + ' dish' + (count !== 1 ? 'es' : '') + ' selected for booking';
+    }
 
-    document.getElementById('setAllZeroBtn').addEventListener('click', () => {
-      document.querySelectorAll('.qty-input:not([disabled])').forEach(inp => {
-        inp.value = 0;
-        inp.dispatchEvent(new Event('input'));
-      });
-    });
+    function changeQty(btn, delta) {
+      const input = btn.parentElement.querySelector('input[type=number]');
+      if (!input) return;
+      const current = parseInt(input.value) || 0;
+      const newVal = Math.max(0, Math.min(10, current + delta));
+      input.value = newVal;
+      updateRowState(input);
+      updateBookingCount();
+    }
 
-    // Wire qty inputs via event delegation (avoids Jinja2-in-oninput linter warnings)
-    document.getElementById('dishTable').addEventListener('input', function (e) {
-      if (e.target.classList.contains('qty-input')) {
-        updateRow(parseInt(e.target.dataset.idx, 10), e.target.value);
-      }
-    });
-
-    updateCount();
+    updateBookingCount();
 
     document.getElementById('previewBtn').addEventListener('click', function () {
       this.disabled = true;
@@ -1023,19 +789,19 @@
           <div class="logo-icon">🍽️</div>
           <div class="logo-text">
             <h1>Hostel Token Booker</h1>
-            <p>PSG iTech · Roll No: {{ rollno }}</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">PSG iTech · Roll No: {{ rollno }}</p>
           </div>
         </div>
-        <a href="/logout" class="logout-btn">⏻ Logout</a>
+        <a href="/logout" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">⏻ Logout</a>
       </div>
 
-      <div class="card">
+      <div class="glass-card">
         <div class="section-header">
           <div>
             <div class="section-title">Booking Preview</div>
             <div class="section-subtitle">Review all individual token bookings before confirming.</div>
           </div>
-          <a href="/dashboard" class="btn btn-ghost">← Back</a>
+          <a href="/dashboard" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">← Back</a>
         </div>
 
         {% if bookings %}
@@ -1043,7 +809,7 @@
           <strong>{{ bookings | length }}</strong> booking{{ 's' if bookings | length != 1 else '' }} ready to submit
         </p>
 
-        <div class="dish-table-wrap">
+        <div class="table-container">
           <table>
             <thead>
               <tr>
@@ -1056,17 +822,22 @@
             </thead>
             <tbody>
               {% for b in bookings %}
-              <tr>
-                <td style="color:var(--text-dim);">{{ loop.index }}</td>
-                <td class="dish-name">{{ b.name }}</td>
+              <tr style="animation-delay: {{ loop.index0 * 0.03 }}s;">
+                <td style="color:var(--text-dim); text-align:center;">{{ loop.index }}</td>
+                <td class="dish-name" style="color:#fff;">{{ b.name }}</td>
                 <td>
-                  <span class="date-chip" style="font-size:0.82rem;">{{ b.date }}</span>
+                  <span class="date-badge" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">{{ b.date }}</span>
                 </td>
                 <td>
-                  {% if b.meal == 'Breakfast' %}🌅{% elif b.meal == 'Lunch' %}☀️{% else %}🌙{% endif %}
-                  {{ b.meal }}
+                  {% if b.meal == 'Breakfast' %}
+                    <span class="pill pill-bf">🌅 Breakfast</span>
+                  {% elif b.meal == 'Lunch' %}
+                    <span class="pill pill-lunch">☀️ Lunch</span>
+                  {% else %}
+                    <span class="pill pill-dinner">🌙 Dinner</span>
+                  {% endif %}
                 </td>
-                <td>{{ b.qty }}</td>
+                <td style="text-align:center;">{{ b.qty }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -1086,62 +857,62 @@
         </div>
 
         <!-- Booking progress section (hidden until booking starts) -->
-        <div id="bookingSection" class="hidden mt-24">
+        <div id="bookingSection" class="hidden" style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.08);">
 
           <!-- Big can't-miss banner -->
           <div id="bookingBanner" style="
-            background: linear-gradient(135deg, #00c896 0%, #00897b 50%, #004d40 100%);
+            background: linear-gradient(135deg, rgba(0,200,83,0.2), rgba(0,137,123,0.2));
+            border: 2px solid rgba(0,200,83,0.5);
             border-radius: 16px;
-            padding: 28px 24px;
-            margin-bottom: 24px;
+            padding: 24px;
             text-align: center;
-            box-shadow: 0 0 40px rgba(0,200,150,0.35);
-            animation: bannerPulse 2.4s ease-in-out infinite;
+            margin-bottom: 24px;
+            box-shadow: 0 0 30px rgba(0,200,83,0.15);
           ">
-            <div style="font-size:1.5rem;font-weight:800;color:#fff;line-height:1.5;letter-spacing:-0.3px;">
-              🚀 Booking in progress in the background!
+            <div style="font-size:22px;font-weight:800;color:#00e676;margin-bottom:8px;">
+              <span style="display:inline-block;animation:rocketBounce 1.5s ease-in-out infinite;">🚀</span>
+              Booking is running in the background!
             </div>
-            <div style="font-size:1rem;color:rgba(255,255,255,0.9);margin-top:10px;line-height:1.7;">
-              ✅ You can minimize this and go do your work —<br>
-              we'll book everything for you! 😊<br>
-              📱 Safe to switch apps or lock your screen
+            <div style="font-size:15px;color:rgba(255,255,255,0.85);font-weight:500;line-height:1.6;">
+              ✅ You can minimize this tab and go do your thing<br>
+              📱 Safe to lock your screen — we'll book everything for you 😊
             </div>
           </div>
-          <style>
-            @keyframes bannerPulse {
-              0%, 100% { box-shadow: 0 0 40px rgba(0,200,150,0.35); }
-              50%       { box-shadow: 0 0 70px rgba(0,200,150,0.65); }
-            }
-          </style>
 
-          <div style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:10px;">Progress</div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <div class="pulse-dot"></div>
+            <span style="font-size:0.85rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Live Status</span>
+          </div>
+
           <div class="progress-wrap">
-            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-bar" id="progressBar">
+              <div class="progress-shimmer"></div>
+            </div>
           </div>
           <div class="progress-label">
-            <span id="progressText">Starting…</span>
-            <span id="progressFrac">0 / {{ bookings | length }}</span>
+            <span id="progressText" style="font-weight: 500;">Initializing...</span>
+            <span id="progressFrac" style="font-variant-numeric: tabular-nums;">0 / {{ bookings | length }}</span>
           </div>
 
-          <div id="resultsList" style="margin-top:16px;"></div>
+          <div id="resultsList" style="margin-top:20px;"></div>
         </div>
 
         <!-- Summary (hidden until done) -->
         <div id="summarySection" class="hidden mt-24">
-          <div class="section-title" style="margin-bottom:16px;">Booking Complete</div>
-          <div class="summary-box">
-            <div class="summary-stat ok">
-              <div class="summary-num" id="summaryOk">0</div>
-              <div class="summary-label">✅ Booked Successfully</div>
+          <div class="section-title" style="margin-bottom:16px;">Booking Complete 🎉</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
+            <div style="background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.3);border-radius:16px;padding:24px;text-align:center;">
+              <div style="font-size:48px;font-weight:800;color:#00e676;" id="summaryOk">0</div>
+              <div style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:4px;">✅ Booked Successfully</div>
             </div>
-            <div class="summary-stat fail">
-              <div class="summary-num" id="summaryFail">0</div>
-              <div class="summary-label">❌ Failed</div>
+            <div style="background:rgba(255,82,82,0.1);border:1px solid rgba(255,82,82,0.3);border-radius:16px;padding:24px;text-align:center;">
+              <div style="font-size:48px;font-weight:800;color:#ff5252;" id="summaryFail">0</div>
+              <div style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:4px;">❌ Failed</div>
             </div>
           </div>
-          <div class="mt-16" style="display:flex;gap:10px;flex-wrap:wrap;">
-            <a href="/dashboard" class="btn btn-secondary">Book More</a>
-            <a href="/logout" class="btn btn-ghost">Logout</a>
+          <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;padding-bottom:16px;">
+            <a href="/dashboard" style="padding:12px 32px;background:linear-gradient(135deg,#00c853,#00897b);color:white;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;box-shadow:0 4px 20px rgba(0,200,83,0.3);">📅 Book More</a>
+            <a href="/logout" style="padding:12px 32px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-weight:600;text-decoration:none;font-size:15px;">Logout</a>
           </div>
         </div>
 
@@ -1195,59 +966,38 @@
           try { obj = JSON.parse(jsonStr); } catch (e) { continue; }
 
           if (obj.done) {
-            // Final summary — show big animated celebration text
+            // Final summary cleanup
             document.getElementById('bookingBanner').style.display = 'none';
             document.getElementById('progressText').innerHTML = `
-              <span style="
-                display:block;
-                font-size:1.45rem;
-                font-weight:800;
-                letter-spacing:-0.3px;
-                line-height:1.5;
-                background: linear-gradient(90deg,
-                  #fff 0%, #00c896 30%, #fff 55%, #00c896 80%, #fff 100%);
-                background-size: 250% 250%;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                animation: footerShimmer 2.5s ease-in-out infinite, donePopIn 0.5s cubic-bezier(.34,1.56,.64,1) both;
-              ">
-                🎉 All done!
-              </span>
-              <span style="
-                display:block;
-                font-size:0.95rem;
-                color:var(--text-muted);
-                margin-top:6px;
-                animation: donePopIn 0.6s 0.1s cubic-bezier(.34,1.56,.64,1) both;
-              ">
-                Go check your <strong style="color:var(--green-glow);">My Token</strong> page —
-                your QR codes are ready to scan at the counter! 🍽️
+              <span style="display:block; font-size:1.5rem; font-weight:800; color:#fff;">🎉 All done!</span>
+              <span style="display:block; font-size:0.9rem; color:var(--text-muted); margin-top:5px;">
+                QR codes are ready in your portal! 🍽️
               </span>
             `;
-            // add keyframe if not already injected
-            if (!document.getElementById('doneKF')) {
-              const s = document.createElement('style');
-              s.id = 'doneKF';
-              s.textContent = '@keyframes donePopIn { from { opacity:0; transform:scale(0.7) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }';
-              document.head.appendChild(s);
-            }
             document.getElementById('summaryOk').textContent = obj.success;
             document.getElementById('summaryFail').textContent = obj.failed;
             document.getElementById('summarySection').classList.remove('hidden');
             document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            if (obj.success > 0) {
+              triggerConfetti();
+            }
           } else if (obj.status) {
-            // Live status before each booking attempt
             document.getElementById('progressText').textContent =
-              `⏳ Booking ${obj.index + 1} of ${obj.total} — ${obj.dish}  ${obj.date}…`;
+              `⏳ Booking ${obj.index + 1} of ${obj.total} — ${obj.dish}...`;
           } else if (obj.error) {
-            // Fatal error from server (e.g. Playwright crash)
             const div = document.createElement('div');
-            div.className = 'result-row result-fail';
-            div.style.gridColumn = '1 / -1';
-            div.innerHTML = `<span class="result-icon">⚠️</span><div class="result-info"><div class="result-dish">Booking engine error</div><div class="result-detail">${escHtml(obj.error)}</div></div>`;
+            div.className = 'result-row res-fail';
+            div.innerHTML = `
+              <span class="result-icon">⚠️</span>
+              <div class="result-info">
+                <div class="result-dish">System Error</div>
+                <div class="result-detail">${escHtml(obj.error)}</div>
+              </div>
+              <span class="result-msg" style="color:#ff5252;">Error</span>
+            `;
             document.getElementById('resultsList').appendChild(div);
-            document.getElementById('progressText').textContent = 'Error — see details below';
+            document.getElementById('progressText').textContent = 'Error occurred';
           } else {
             done_count++;
             const pct = Math.round((done_count / TOTAL) * 100);
@@ -1256,20 +1006,34 @@
               obj.ok ? '✅ Booked ' + obj.dish : '❌ Failed ' + obj.dish;
             document.getElementById('progressFrac').textContent = done_count + ' / ' + TOTAL;
 
-            // Add result row
             const div = document.createElement('div');
-            div.className = 'result-row ' + (obj.ok ? 'result-ok' : 'result-fail');
+            div.className = 'result-row ' + (obj.ok ? 'res-ok' : 'res-fail');
             div.innerHTML = `
-          <span class="result-icon">${obj.ok ? '✅' : '❌'}</span>
-          <div class="result-info">
-            <div class="result-dish">${escHtml(obj.dish)}</div>
-            <div class="result-detail">${escHtml(obj.date)} · ${escHtml(obj.meal)} · qty ${obj.qty}</div>
-          </div>
-          <span class="result-msg" title="${escHtml(obj.msg)}">${escHtml(obj.msg.substring(0, 60))}</span>
-        `;
-            document.getElementById('resultsList').appendChild(div);
+              <span class="result-icon">${obj.ok ? '✅' : '❌'}</span>
+              <div class="result-info">
+                <div class="result-dish">${escHtml(obj.dish)}</div>
+                <div class="result-detail">${escHtml(obj.date)} · ${escHtml(obj.meal)}</div>
+              </div>
+              <span class="result-msg">${escHtml(obj.msg.substring(0, 40))}</span>
+            `;
+            document.getElementById('resultsList').prepend(div);
           }
         }
+      }
+    }
+
+    function triggerConfetti() {
+      for (let i = 0; i < 50; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.backgroundColor = ['#00e676', '#00c853', '#fff', '#ffd600'][Math.floor(Math.random()*4)];
+        c.style.width = Math.random() * 8 + 4 + 'px';
+        c.style.height = c.style.width;
+        c.style.animationDuration = Math.random() * 2 + 2 + 's';
+        c.style.opacity = Math.random();
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
       }
     }
 
@@ -1285,33 +1049,8 @@
 
   {% endif %}
 
-  <footer style="text-align:center;padding:24px 16px 32px;">
-    <style>
-      @keyframes footerShimmer {
-        0%   { background-position: 0% 50%; }
-        50%  { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
-      .footer-credit {
-        display: inline-block;
-        font-size: 13px;
-        font-weight: 500;
-        letter-spacing: 1.4px;
-
-        background: linear-gradient(90deg,
-          rgba(255,255,255,0.25) 0%,
-          rgba(0,200,150,0.7)   35%,
-          rgba(255,255,255,0.55) 55%,
-          rgba(0,200,150,0.5)   80%,
-          rgba(255,255,255,0.25) 100%);
-        background-size: 250% 250%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        animation: footerShimmer 4s ease-in-out infinite;
-      }
-    </style>
-    <span class="footer-credit">made by Sriram R</span>
+  <footer style="text-align:center;padding:24px 20px;margin-top:40px;border-top:1px solid rgba(255,255,255,0.1);">
+    <span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Made by Sriram R</span>
   </footer>
 
 </body>
