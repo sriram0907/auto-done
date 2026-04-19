@@ -339,7 +339,16 @@ def book():
             with sync_playwright() as p:
                 browser = p.chromium.launch(
                     headless=True,
-                    args=["--no-sandbox", "--disable-setuid-sandbox"]
+                    args=[
+                        "--no-sandbox",
+                        "--disable-setuid-sandbox",
+                        "--disable-dev-shm-usage",
+                        "--disable-gpu",
+                        "--no-first-run",
+                        "--no-zygote",
+                        "--single-process",
+                        "--disable-extensions",
+                    ]
                 )
                 context = browser.new_context(ignore_https_errors=True)
                 page = context.new_page()
