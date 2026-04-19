@@ -1,4 +1,6 @@
 import os
+os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "0"
+
 import re
 import sys
 import json
@@ -348,10 +350,6 @@ def book():
             return
 
         try:
-            os.environ.setdefault(
-                "PLAYWRIGHT_BROWSERS_PATH", 
-                "/opt/render/project/.playwright"
-            )
             with sync_playwright() as p:
                 browser = p.chromium.launch(
                     headless=True,
