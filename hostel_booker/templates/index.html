@@ -433,6 +433,73 @@
       .header { flex-direction: column; text-align: center; gap: 20px; }
     }
     
+    @media (max-width: 600px) {
+        /* Main container */
+        .main-card, .container, [class*="card"] {
+            margin: 8px !important;
+            padding: 16px !important;
+            border-radius: 12px !important;
+        }
+        
+        /* Table responsive */
+        table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        /* Dish rows - stack vertically on mobile */
+        [data-dish-name] {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            padding: 16px !important;
+            align-items: flex-start !important;
+        }
+        
+        /* Date pills - wrap properly */
+        .dates-container, [class*="dates"] {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+        }
+        
+        /* Date pill size */
+        .date-pill, [class*="date-pill"] {
+            font-size: 11px !important;
+            padding: 4px 8px !important;
+        }
+        
+        /* Qty controls */
+        .qty-control {
+            justify-content: flex-start !important;
+        }
+        
+        /* Header */
+        header, nav {
+            padding: 12px 16px !important;
+        }
+        
+        /* Buttons */
+        .btn-group, [class*="btn-group"] {
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+        }
+        
+        /* Preview table */
+        th, td {
+            padding: 8px 10px !important;
+            font-size: 13px !important;
+        }
+        
+        /* Booking results */
+        .result-row {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 4px !important;
+        }
+    }
+    
     .hidden { display: none !important; }
   </style>
 </head>
@@ -603,60 +670,60 @@
           <p id="bookingCount" style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0 0 20px 0;">0 dishes selected for booking</p>
 
 
-        <div class="table-container" id="dishTable">
-          <table>
-            <thead>
-              <tr>
-                <th>Dish</th>
-                <th>Available Dates</th>
-                <th style="width:110px;">Qty (0=skip)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for i, dish in dishes | enumerate %}
-              {% set has_dates = dish.dates | length > 0 %}
-              {% set bookable = has_dates and dish.has_tokens %}
-              <tr class="dish-row {% if not bookable %}disabled{% endif %}" id="row_{{ i }}"
-                data-dish-name="{{ dish.name }}" 
-                data-dish-dates='{{ dish.dates | tojson }}'
-                data-dish-meal="{{ dish.meal }}"
-                style="animation-delay: {{ loop.index0 * 0.05 }}s;">
-                <td>
-                  <div class="dish-name" style="font-size: 1rem; color: #fff;">{{ dish.name }}</div>
-                  {% if not dish.has_tokens %}
-                  <div style="font-size:0.75rem;color:var(--text-dim);margin-top:4px;">No tokens this cycle</div>
-                  {% endif %}
-                </td>
-                <td>
-                  {% if has_dates and dish.has_tokens %}
-                  <div class="dates-list">
-                    {% for d in dish.dates %}
-                    <span class="date-badge">{{ d }}</span>
-                    {% endfor %}
-                  </div>
-                  {% elif not dish.has_tokens %}
-                  <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No tokens</span>
-                  {% else %}
-                  <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No dates available</span>
-                  {% endif %}
-                </td>
-                <td>
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="display:flex;align-items:center;gap:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:4px 8px;">
-                      <button onclick="changeQty(this,-1)" {% if not bookable %}disabled{% endif %} style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(255,255,255,0.1);color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;" onmouseover="if(!this.disabled)this.style.background='rgba(255,255,255,0.2)'" onmouseout="if(!this.disabled)this.style.background='rgba(255,255,255,0.1)'">−</button>
-                      <input type="number" name="dish_qty_{{ i }}" value="{% if bookable %}1{% else %}0{% endif %}"
-                        min="0" max="10" class="qty-input" data-idx="{{ i }}" {% if not bookable %}disabled{% endif %}
-                        oninput="updateRowState(this)"
-                        style="width:36px;text-align:center;background:transparent;border:none;color:white;font-size:16px;font-weight:600;outline:none;-moz-appearance:textfield;" />
-                      <button onclick="changeQty(this,1)" {% if not bookable %}disabled{% endif %} style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(0,200,83,0.2);color:#00c853;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;" onmouseover="if(!this.disabled)this.style.background='rgba(0,200,83,0.35)'" onmouseout="if(!this.disabled)this.style.background='rgba(0,200,83,0.2)'">+</button>
-                    </div>
-                    <span class="skip-badge hidden" id="skip_{{ i }}">SKIP</span>
-                  </div>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+        <div id="dishTable">
+          {% for i, dish in dishes | enumerate %}
+          {% set has_dates = dish.dates | length > 0 %}
+          {% set bookable = has_dates and dish.has_tokens %}
+          <div class="dish-row {% if not bookable %}disabled{% endif %}" id="row_{{ i }}"
+            data-dish-name="{{ dish.name }}"
+            data-dish-dates='{{ dish.dates | tojson }}'
+            data-dish-meal="{{ dish.meal }}"
+            style="
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 12px;
+                padding: 16px;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: wrap;
+                animation-delay: {{ loop.index0 * 0.05 }}s;
+            ">
+            
+            <div style="flex: 1; min-width: 150px;">
+                <div class="dish-name" style="font-size: 1rem; color: #fff; font-weight: 600;">{{ dish.name }}</div>
+                {% if not dish.has_tokens %}
+                <div style="font-size:0.75rem;color:var(--text-dim);margin-top:4px;">No tokens this cycle</div>
+                {% endif %}
+            </div>
+
+            <div style="flex: 2; min-width: 200px; display: flex; flex-wrap: wrap; gap: 6px;" class="dates-container">
+                {% if has_dates and dish.has_tokens %}
+                {% for d in dish.dates %}
+                <span class="date-badge date-pill">{{ d }}</span>
+                {% endfor %}
+                {% elif not dish.has_tokens %}
+                <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No tokens</span>
+                {% else %}
+                <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No dates available</span>
+                {% endif %}
+            </div>
+            
+            <div style="flex-shrink: 0; display: flex; align-items: center; gap: 10px;" class="qty-control">
+                <div style="display:flex;align-items:center;gap:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:4px 8px;">
+                  <button onclick="changeQty(this,-1)" {% if not bookable %}disabled{% endif %} style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(255,255,255,0.1);color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;" onmouseover="if(!this.disabled)this.style.background='rgba(255,255,255,0.2)'" onmouseout="if(!this.disabled)this.style.background='rgba(255,255,255,0.1)'">−</button>
+                  <input type="number" name="dish_qty_{{ i }}" value="{% if bookable %}1{% else %}0{% endif %}"
+                    min="0" max="10" class="qty-input" data-idx="{{ i }}" {% if not bookable %}disabled{% endif %}
+                    oninput="updateRowState(this)"
+                    style="width:36px;text-align:center;background:transparent;border:none;color:white;font-size:16px;font-weight:600;outline:none;-moz-appearance:textfield;" />
+                  <button onclick="changeQty(this,1)" {% if not bookable %}disabled{% endif %} style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(0,200,83,0.2);color:#00c853;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;" onmouseover="if(!this.disabled)this.style.background='rgba(0,200,83,0.35)'" onmouseout="if(!this.disabled)this.style.background='rgba(0,200,83,0.2)'">+</button>
+                </div>
+                <span class="skip-badge hidden" id="skip_{{ i }}">SKIP</span>
+            </div>
+            
+          </div>
+          {% endfor %}
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">

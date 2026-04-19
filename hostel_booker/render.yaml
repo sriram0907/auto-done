@@ -2,6 +2,6 @@ services:
   - type: web
     name: hostel-token-booker
     env: python
-    buildCommand: "pip install -r requirements.txt && playwright install chromium && playwright install-deps chromium"
+    buildCommand: "pip install -r requirements.txt && python -m playwright install chromium"
     startCommand: "gunicorn app:app --timeout 300 --workers 1"
     plan: free

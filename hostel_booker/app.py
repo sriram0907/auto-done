@@ -4,6 +4,18 @@ import sys
 import json
 import time
 import datetime
+import subprocess
+
+def get_chromium_path():
+    try:
+        result = subprocess.run(
+            ['python', '-m', 'playwright', 'show-browsers'],
+            capture_output=True, text=True
+        )
+        # Let Playwright find it automatically
+        return None
+    except:
+        return None
 
 # Force UTF-8 output on Windows (avoids charmap codec errors for → ✓ etc.)
 if hasattr(sys.stdout, "reconfigure"):
