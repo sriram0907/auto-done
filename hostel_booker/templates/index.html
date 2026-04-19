@@ -771,11 +771,23 @@
         </div>
         <div class="form-group">
           <label for="password">Portal Password</label>
-          <input type="password" id="password" name="password" placeholder="Enter your portal password"
-            autocomplete="current-password" required />
+          <div style="position:relative;">
+            <input type="password" id="password" name="password" placeholder="Enter your portal password"
+              autocomplete="current-password" required
+              style="padding-right:44px;border-color:var(--border-hl);background:var(--bg-card2);" />
+            <button type="button" id="eyeBtn" onclick="togglePassword()"
+              style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;
+                     cursor:pointer;color:var(--text-muted);padding:4px;line-height:0;" aria-label="Toggle password">
+              <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <button type="submit" class="btn btn-primary" id="loginBtn">
-          <span id="loginBtnText">Sign In & Load Tokens</span>
+          <span id="loginBtnText">Sign In &amp; Load Tokens</span>
         </button>
       </form>
 
@@ -791,6 +803,20 @@
       btn.disabled = true;
       document.getElementById('loginBtnText').textContent = 'Signing in…';
     });
+    function togglePassword() {
+      const inp = document.getElementById('password');
+      const icon = document.getElementById('eyeIcon');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>'
+          + '<path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>'
+          + '<line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        inp.type = 'password';
+        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>'
+          + '<circle cx="12" cy="12" r="3"/>';
+      }
+    }
   </script>
 
   {# ════════════════════════════════════════════════════════ DASHBOARD VIEW #}
@@ -1061,8 +1087,34 @@
 
         <!-- Booking progress section (hidden until booking starts) -->
         <div id="bookingSection" class="hidden mt-24">
-          <div class="section-title" style="margin-bottom:12px;">Booking in Progress</div>
 
+          <!-- Big can't-miss banner -->
+          <div id="bookingBanner" style="
+            background: linear-gradient(135deg, #00c896 0%, #00897b 50%, #004d40 100%);
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0,200,150,0.35);
+            animation: bannerPulse 2.4s ease-in-out infinite;
+          ">
+            <div style="font-size:1.5rem;font-weight:800;color:#fff;line-height:1.5;letter-spacing:-0.3px;">
+              🚀 Booking in progress in the background!
+            </div>
+            <div style="font-size:1rem;color:rgba(255,255,255,0.9);margin-top:10px;line-height:1.7;">
+              ✅ You can minimize this and go do your work —<br>
+              we'll book everything for you! 😊<br>
+              📱 Safe to switch apps or lock your screen
+            </div>
+          </div>
+          <style>
+            @keyframes bannerPulse {
+              0%, 100% { box-shadow: 0 0 40px rgba(0,200,150,0.35); }
+              50%       { box-shadow: 0 0 70px rgba(0,200,150,0.65); }
+            }
+          </style>
+
+          <div style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:10px;">Progress</div>
           <div class="progress-wrap">
             <div class="progress-bar" id="progressBar"></div>
           </div>
@@ -1071,7 +1123,7 @@
             <span id="progressFrac">0 / {{ bookings | length }}</span>
           </div>
 
-          <div id="resultsList"></div>
+          <div id="resultsList" style="margin-top:16px;"></div>
         </div>
 
         <!-- Summary (hidden until done) -->
@@ -1143,8 +1195,43 @@
           try { obj = JSON.parse(jsonStr); } catch (e) { continue; }
 
           if (obj.done) {
-            // Final summary
-            document.getElementById('progressText').textContent = 'All done!';
+            // Final summary — show big animated celebration text
+            document.getElementById('bookingBanner').style.display = 'none';
+            document.getElementById('progressText').innerHTML = `
+              <span style="
+                display:block;
+                font-size:1.45rem;
+                font-weight:800;
+                letter-spacing:-0.3px;
+                line-height:1.5;
+                background: linear-gradient(90deg,
+                  #fff 0%, #00c896 30%, #fff 55%, #00c896 80%, #fff 100%);
+                background-size: 250% 250%;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: footerShimmer 2.5s ease-in-out infinite, donePopIn 0.5s cubic-bezier(.34,1.56,.64,1) both;
+              ">
+                🎉 All done!
+              </span>
+              <span style="
+                display:block;
+                font-size:0.95rem;
+                color:var(--text-muted);
+                margin-top:6px;
+                animation: donePopIn 0.6s 0.1s cubic-bezier(.34,1.56,.64,1) both;
+              ">
+                Go check your <strong style="color:var(--green-glow);">My Token</strong> page —
+                your QR codes are ready to scan at the counter! 🍽️
+              </span>
+            `;
+            // add keyframe if not already injected
+            if (!document.getElementById('doneKF')) {
+              const s = document.createElement('style');
+              s.id = 'doneKF';
+              s.textContent = '@keyframes donePopIn { from { opacity:0; transform:scale(0.7) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }';
+              document.head.appendChild(s);
+            }
             document.getElementById('summaryOk').textContent = obj.success;
             document.getElementById('summaryFail').textContent = obj.failed;
             document.getElementById('summarySection').classList.remove('hidden');
@@ -1197,6 +1284,35 @@
   </script>
 
   {% endif %}
+
+  <footer style="text-align:center;padding:24px 16px 32px;">
+    <style>
+      @keyframes footerShimmer {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .footer-credit {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 1.4px;
+
+        background: linear-gradient(90deg,
+          rgba(255,255,255,0.25) 0%,
+          rgba(0,200,150,0.7)   35%,
+          rgba(255,255,255,0.55) 55%,
+          rgba(0,200,150,0.5)   80%,
+          rgba(255,255,255,0.25) 100%);
+        background-size: 250% 250%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: footerShimmer 4s ease-in-out infinite;
+      }
+    </style>
+    <span class="footer-credit">made by Sriram R</span>
+  </footer>
 
 </body>
 
