@@ -348,6 +348,10 @@ def book():
             return
 
         try:
+            os.environ.setdefault(
+                "PLAYWRIGHT_BROWSERS_PATH", 
+                "/opt/render/project/.playwright"
+            )
             with sync_playwright() as p:
                 browser = p.chromium.launch(
                     headless=True,
