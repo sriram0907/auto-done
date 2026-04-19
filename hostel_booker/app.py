@@ -401,26 +401,20 @@ def book():
                 for dish_name, dish_bookings in grouped.items():
                     btn_id = DISH_TO_BUTTON.get(dish_name, "")
 
-                    # Click the Token Booking tab to refresh cards in-place.
-                    # This is ~3s faster than a full page.goto() reload.
-                    # Fall back to a full reload if the tab click fails.
-                    print(f"[PLAYWRIGHT] Refreshing cards for dish: {dish_name}")
+                    # Full page reload for every dish group — slower but reliable.
+                    # Tab-click-only caused buttons to disappear intermittently.
+                    print(f"[PLAYWRIGHT] Reloading page for dish: {dish_name}")
+                    page.goto(
+                        f"{BASE_URL}/Student/StudentView",
+                        wait_until="domcontentloaded",
+                        timeout=30_000,
+                    )
+                    page.wait_for_timeout(1500)
                     try:
                         page.locator("a:has-text('Token Booking'), li:has-text('Token Booking')").first.click()
-                        page.wait_for_timeout(800)
+                        page.wait_for_timeout(1000)
                     except Exception as tab_err:
-                        print(f"[PLAYWRIGHT] Tab click failed, falling back to full reload: {tab_err}")
-                        page.goto(
-                            f"{BASE_URL}/Student/StudentView",
-                            wait_until="domcontentloaded",
-                            timeout=30_000,
-                        )
-                        page.wait_for_timeout(1500)
-                        try:
-                            page.locator("a:has-text('Token Booking'), li:has-text('Token Booking')").first.click()
-                            page.wait_for_timeout(800)
-                        except Exception:
-                            pass
+                        print(f"[PLAYWRIGHT] Tab click failed (non-fatal): {tab_err}")
 
                     # One-time diagnostic screenshot (first dish only)
                     if booking_index == 0:
