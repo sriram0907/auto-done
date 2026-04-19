@@ -20,7 +20,7 @@ from bs4 import BeautifulSoup
 
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.environ.get("SECRET_KEY", os.urandom(24))
 app.jinja_env.filters["enumerate"] = enumerate
 
 # ─── Constants ────────────────────────────────────────────────────────────────
