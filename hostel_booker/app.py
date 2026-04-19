@@ -401,19 +401,26 @@ def book():
                 for dish_name, dish_bookings in grouped.items():
                     btn_id = DISH_TO_BUTTON.get(dish_name, "")
 
-                    # One StudentView reload per dish to get fresh card state
-                    print(f"[PLAYWRIGHT] Loading page for dish: {dish_name}")
-                    page.goto(
-                        f"{BASE_URL}/Student/StudentView",
-                        wait_until="domcontentloaded",
-                        timeout=30_000,
-                    )
-                    page.wait_for_timeout(1500)
+                    # Click the Token Booking tab to refresh cards in-place.
+                    # This is ~3s faster than a full page.goto() reload.
+                    # Fall back to a full reload if the tab click fails.
+                    print(f"[PLAYWRIGHT] Refreshing cards for dish: {dish_name}")
                     try:
                         page.locator("a:has-text('Token Booking'), li:has-text('Token Booking')").first.click()
-                        page.wait_for_timeout(1000)
+                        page.wait_for_timeout(800)
                     except Exception as tab_err:
-                        print(f"[PLAYWRIGHT] Tab click failed (non-fatal): {tab_err}")
+                        print(f"[PLAYWRIGHT] Tab click failed, falling back to full reload: {tab_err}")
+                        page.goto(
+                            f"{BASE_URL}/Student/StudentView",
+                            wait_until="domcontentloaded",
+                            timeout=30_000,
+                        )
+                        page.wait_for_timeout(1500)
+                        try:
+                            page.locator("a:has-text('Token Booking'), li:has-text('Token Booking')").first.click()
+                            page.wait_for_timeout(800)
+                        except Exception:
+                            pass
 
                     # One-time diagnostic screenshot (first dish only)
                     if booking_index == 0:
@@ -490,11 +497,11 @@ def book():
                                 }
                             """, [btn_id, date, meal, qty])
 
-                            page.wait_for_timeout(1000)
+                            page.wait_for_timeout(600)
 
                             # Click Buy button by its stable DOM id
                             page.locator(f"#{btn_id}").click()
-                            page.wait_for_timeout(1500)
+                            page.wait_for_timeout(800)
 
                             # Dismiss any inline OK dialog
                             try:
@@ -502,7 +509,7 @@ def book():
                             except Exception:
                                 pass
 
-                            page.wait_for_timeout(500)
+                            page.wait_for_timeout(300)
 
                             # Screenshot after very first booking
                             if booking_index == 0:

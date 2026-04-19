@@ -766,7 +766,7 @@
       <form method="POST" action="/login" id="loginForm">
         <div class="form-group">
           <label for="rollno">Roll Number</label>
-          <input type="text" id="rollno" name="rollno" placeholder="e.g. 715525104209" autocomplete="username"
+          <input type="text" id="rollno" name="rollno" placeholder="Enter your roll number" autocomplete="username"
             inputmode="numeric" required />
         </div>
         <div class="form-group">
@@ -997,7 +997,7 @@
           <div class="logo-icon">🍽️</div>
           <div class="logo-text">
             <h1>Hostel Token Booker</h1>
-            <p>PSG iTech · Roll No: 715525104209</p>
+            <p>PSG iTech · Roll No: {{ rollno }}</p>
           </div>
         </div>
         <a href="/logout" class="logout-btn">⏻ Logout</a>
