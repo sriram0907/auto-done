@@ -28,14 +28,14 @@ app.jinja_env.filters["enumerate"] = enumerate
 BASE_URL = "https://hostelviewx.psgitech.ac.in/Hostel"
 
 PTOKEN_MAP = {
-    "CHILLI GOBI": 1,
-    "CHICKEN PALLIPALAYAM/CHETINAD": 2,
-    "MUSHROOM PALLIPALAYAM": 3,
-    "OMELETTE": 4,
-    "BOILED EGG/EGG KURMA": 5,
-    "MUTTON CURRY": 6,
-    "BABY CORN MANCHURIAN": 7,
-    "PANEER": 8,
+    "CHILLI GOBI": 8,
+    "CHICKEN PALLIPALAYAM/CHETINAD": 1,
+    "MUSHROOM PALLIPALAYAM": 27,
+    "OMELETTE": 7,
+    "BOILED EGG/EGG KURMA": 85,
+    "MUTTON CURRY": 2,
+    "BABY CORN MANCHURIAN": 88,
+    "PANEER": 89,
 }
 
 BUTTON_TO_DISH = {
@@ -109,25 +109,6 @@ def save_session_cookies(s):
 
 # ─── Scraping ─────────────────────────────────────────────────────────────────
 
-def get_ptoken_from_js(js_text, button_id):
-    """
-    Scan the portal's JS bundle for the PTOKEN_ID associated with a button.
-    The bundle contains click-handler code like:
-      $('#Gobichilli').click(function(){ ... 'PTOKEN_ID': 8 ... })
-    Two patterns are tried to cover different formatting styles.
-    Returns the integer PTOKEN_ID, or None if not found.
-    """
-    # Pattern 1: string key  'Gobichilli' ... PTOKEN_ID=8  or  PTOKEN_ID: 8
-    p1 = rf"'{re.escape(button_id)}'[^}}]{{0,600}}PTOKEN_ID[\s=:]+([0-9]+)"
-    m = re.search(p1, js_text, re.DOTALL)
-    if m:
-        return int(m.group(1))
-    # Pattern 2: unquoted   Gobichilli ... PTOKEN_ID=8
-    p2 = rf"{re.escape(button_id)}[^}}]{{0,600}}PTOKEN_ID[\s=:]+([0-9]+)"
-    m = re.search(p2, js_text, re.DOTALL)
-    if m:
-        return int(m.group(1))
-    return None
 
 def scrape_dishes(s):
     # Fetch the student dashboard page
@@ -135,32 +116,12 @@ def scrape_dishes(s):
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
 
-    # Fetch the JS bundle to extract dynamic PTOKEN_IDs
-    js_text = ""
-    try:
-        js_resp = s.get(
-            f"{BASE_URL}/assets/js/scripts.bundle.js",
-            headers={"X-Requested-With": "XMLHttpRequest"},
-            timeout=15,
-        )
-        if js_resp.status_code == 200:
-            js_text = js_resp.text
-            print(f"[SCRAPE] JS bundle fetched ({len(js_text)} chars)")
-        else:
-            print(f"[SCRAPE] JS bundle fetch failed: HTTP {js_resp.status_code}")
-    except Exception as e:
-        print(f"[SCRAPE] JS bundle fetch error: {e}")
+   
 
     dishes = []
     for btn_id, dish_name in BUTTON_TO_DISH.items():
-        # ── Dynamic PTOKEN_ID from JS ─────────────────────────────────────────
-        ptoken = get_ptoken_from_js(js_text, btn_id) if js_text else None
-        if ptoken:
-            token_id = ptoken
-            print(f"[SCRAPE] {dish_name}: PTOKEN_ID={token_id} (from JS)")
-        else:
-            token_id = PTOKEN_MAP.get(dish_name, 0)
-            print(f"[SCRAPE] {dish_name}: PTOKEN_ID={token_id} (fallback hardcoded)")
+        token_id = PTOKEN_MAP.get(dish_name, 0)
+        print(f"[SCRAPE] {dish_name}: PTOKEN_ID={token_id}")
 
         btn = soup.find(id=btn_id)
         has_tokens = bool(DISH_SCHEDULE.get(dish_name))  # empty dict → no tokens
