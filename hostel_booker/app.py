@@ -1,9 +1,7 @@
 import os
-import re
 import sys
 import json
 import datetime
-
 
 # Force UTF-8 output on Windows (avoids charmap codec errors for → ✓ etc.)
 if hasattr(sys.stdout, "reconfigure"):
@@ -37,6 +35,16 @@ PTOKEN_MAP = {
     "BABY CORN MANCHURIAN": 88,
     "PANEER": 89,
 }
+
+# Per-dish max quantity, matching the portal's own client-side limits
+# (see e.g. "quantityInput6 > 2" for most, but omelette allows 3)
+DEFAULT_MAX_QTY = 2
+MAX_QTY_MAP = {
+    "OMELETTE": 3,
+}
+
+def get_max_qty(dish_name):
+    return MAX_QTY_MAP.get(dish_name, DEFAULT_MAX_QTY)
 
 BUTTON_TO_DISH = {
     "Gobichilli": "CHILLI GOBI",
@@ -109,6 +117,20 @@ def save_session_cookies(s):
 
 # ─── Scraping ─────────────────────────────────────────────────────────────────
 
+def enrich_dates(dish_name, raw_dates):
+    """Turn ['16-07-2026', ...] into [{'date':'16-07-2026','day':'Thu','meal':'Dinner'}, ...]."""
+    enriched = []
+    for d in raw_dates:
+        try:
+            day_short = datetime.datetime.strptime(d, "%d-%m-%Y").strftime("%a")  # Mon, Tue...
+        except Exception:
+            day_short = ""
+        enriched.append({
+            "date": d,
+            "day": day_short,
+            "meal": get_meal_for_date(dish_name, d),
+        })
+    return enriched
 
 def scrape_dishes(s):
     # Fetch the student dashboard page
@@ -116,17 +138,15 @@ def scrape_dishes(s):
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
 
-   
-
     dishes = []
     for btn_id, dish_name in BUTTON_TO_DISH.items():
         token_id = PTOKEN_MAP.get(dish_name, 0)
-        print(f"[SCRAPE] {dish_name}: PTOKEN_ID={token_id}")
+        max_qty = get_max_qty(dish_name)
 
         btn = soup.find(id=btn_id)
         has_tokens = bool(DISH_SCHEDULE.get(dish_name))  # empty dict → no tokens
         if btn is None:
-            dishes.append({"name": dish_name, "token_id": token_id, "dates": [], "has_tokens": has_tokens})
+            dishes.append({"name": dish_name, "token_id": token_id, "dates": [], "has_tokens": has_tokens, "max_qty": max_qty})
             continue
         container = btn.parent
         for _ in range(8):
@@ -138,23 +158,23 @@ def scrape_dishes(s):
                 break
             container = container.parent
         if container is None:
-            dishes.append({"name": dish_name, "token_id": token_id, "dates": [], "has_tokens": has_tokens})
+            dishes.append({"name": dish_name, "token_id": token_id, "dates": [], "has_tokens": has_tokens, "max_qty": max_qty})
             continue
-        dates = []
+        raw_dates = []
         if select_el:
             for option in select_el.find_all("option")[1:]:
                 val = option.get("value", "").strip()
                 if val:
-                    dates.append(val)
+                    raw_dates.append(val)
 
-        print(f"[SCRAPE] {dish_name} → token_id={token_id}, has_tokens={has_tokens}, dates={dates}")
-        meal_info = DISH_SCHEDULE.get(dish_name, {})
+        dates = enrich_dates(dish_name, raw_dates)
+        print(f"[SCRAPE] {dish_name} → token_id={token_id}, has_tokens={has_tokens}, max_qty={max_qty}, dates={dates}")
         dishes.append({
-            "name": dish_name, 
-            "token_id": token_id, 
-            "dates": dates, 
+            "name": dish_name,
+            "token_id": token_id,
+            "dates": dates,
             "has_tokens": has_tokens,
-            "meal": meal_info.get("meal", "Lunch")
+            "max_qty": max_qty,
         })
     return dishes
 
@@ -243,7 +263,6 @@ def preview():
         return redirect(url_for("index"))
 
     print(f"[PREVIEW] Raw form data: {dict(request.form)}")
-    print(f"[PREVIEW] All keys: {list(request.form.keys())}")
 
     bookings = []
     idx = 0
@@ -251,25 +270,30 @@ def preview():
         name_key = f"dish_name_{idx}"
         if name_key not in request.form:
             break
-        name       = request.form.get(name_key, "")
-        dates_json = request.form.get(f"dish_dates_{idx}", "[]")
-        qty        = int(request.form.get(f"dish_qty_{idx}", 0))
+        name = request.form.get(name_key, "")
+        # selections_json is a list of {"date": "...", "qty": N} — one entry per
+        # date the user actually ticked, each with its own quantity.
+        selections_json = request.form.get(f"dish_selections_{idx}", "[]")
+        try:
+            selections = json.loads(selections_json)
+        except Exception:
+            selections = []
 
-        # qty == 0 means the user wants to skip this dish
-        if qty > 0:
-            try:
-                dates = json.loads(dates_json)
-            except Exception:
-                dates = []
-            for date in dates:
-                meal = get_meal_for_date(name, date)  # computed per date from day-of-week schedule
-                bookings.append({
-                    "name": name,
-                    "token_id": PTOKEN_MAP.get(name, 0),
-                    "date": date,
-                    "meal": meal,
-                    "qty": qty,
-                })
+        max_qty = get_max_qty(name)
+        for sel in selections:
+            date = sel.get("date", "")
+            qty = int(sel.get("qty", 0))
+            if not date or qty <= 0:
+                continue
+            qty = min(qty, max_qty)  # enforce server-side cap regardless of client
+            meal = get_meal_for_date(name, date)
+            bookings.append({
+                "name": name,
+                "token_id": PTOKEN_MAP.get(name, 0),
+                "date": date,
+                "meal": meal,
+                "qty": qty,
+            })
         idx += 1
 
     rollno = session.get("rollno", "Unknown")
@@ -299,7 +323,7 @@ def book():
             dish_name = b.get("name", "")
             date = b.get("date", "")
             meal = get_meal_for_date(dish_name, date)
-            qty = b.get("qty", 1)
+            qty = min(int(b.get("qty", 1)), get_max_qty(dish_name))
             token_id = b.get("token_id") or PTOKEN_MAP.get(dish_name, 0)
 
             yield f"data: {json.dumps({'status': True, 'index': index, 'total': len(bookings), 'dish': dish_name, 'date': date})}\n\n"
@@ -350,6 +374,7 @@ def book():
         mimetype="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
 
 
 
