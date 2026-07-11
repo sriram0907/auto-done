@@ -469,6 +469,84 @@
       .result-row .result-msg { text-align: left !important; white-space: normal !important; }
     }
     
+    /* ── Booking scroll panel (preview page) ─────────────────── */
+    .booking-scroll-panel {
+      max-height: 52vh;
+      overflow-y: auto;
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+      /* Custom scrollbar */
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,200,83,0.4) rgba(255,255,255,0.05);
+    }
+    .booking-scroll-panel::-webkit-scrollbar { width: 6px; height: 6px; }
+    .booking-scroll-panel::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 6px; }
+    .booking-scroll-panel::-webkit-scrollbar-thumb { background: rgba(0,200,83,0.4); border-radius: 6px; }
+    .booking-scroll-panel::-webkit-scrollbar-thumb:hover { background: rgba(0,200,83,0.7); }
+
+    /* Sticky header inside the scroll panel */
+    .booking-scroll-panel table { width: 100%; border-collapse: collapse; }
+    .booking-scroll-panel thead tr { position: sticky; top: 0; z-index: 2; }
+    .booking-scroll-panel thead th {
+      background: rgba(10, 22, 40, 0.97);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    /* ── Preview action buttons ────────────────────────────────── */
+    .preview-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+      margin-top: 4px;
+    }
+    .preview-edit-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 4px 0;
+      transition: color var(--trans);
+      align-self: center;
+    }
+    .preview-edit-link:hover { color: #fff; }
+    .preview-confirm-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 14px;
+      box-shadow: 0 6px 24px rgba(0,200,83,0.35);
+    }
+    .preview-confirm-btn:hover {
+      box-shadow: 0 10px 32px rgba(0,200,83,0.5);
+      transform: translateY(-1px);
+    }
+    .preview-confirm-btn:active { transform: translateY(0); }
+
+    /* Count label tightening */
+    .preview-count {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .preview-count strong { color: #00e676; font-size: 1rem; }
+
+    @media (max-width: 600px) {
+      .booking-scroll-panel { max-height: 46vh; }
+      .preview-confirm-btn { font-size: 1rem; padding: 15px; }
+    }
+
     .hidden { display: none !important; }
   </style>
 </head>
@@ -996,7 +1074,7 @@
           <strong>{{ bookings | length }}</strong> booking{{ 's' if bookings | length != 1 else '' }} ready to submit
         </p>
 
-        <div class="table-container">
+        <div class="booking-scroll-panel">
           <table>
             <thead>
               <tr>
@@ -1036,12 +1114,13 @@
           const BOOKING_JSON_DATA = {{ bookings | tojson }};
         </script>
 
-        <div style="display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;" class="mt-16">
-          <a href="/dashboard" class="btn btn-secondary">← Edit Selection</a>
-          <button class="btn btn-success" id="confirmBtn" onclick="startBooking()">
+        <div class="preview-actions">
+          <a href="/dashboard" class="preview-edit-link">← Edit Selection</a>
+          <button class="btn btn-primary preview-confirm-btn" id="confirmBtn" onclick="startBooking()">
             🚀 Confirm &amp; Book All
           </button>
         </div>
+
 
         <!-- Booking progress section (hidden until booking starts) -->
         <div id="bookingSection" class="hidden" style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.08);">
