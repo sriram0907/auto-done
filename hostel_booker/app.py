@@ -306,6 +306,17 @@ BOOKING_HEADERS = {
     "Referer": f"{BASE_URL}/Student/StudentView",
 }
 
+ORESULT_MESSAGES = {
+    2: "Non-vegetarian food is not available for tomorrow",
+    3: "Token booking time has expired for this date",
+    4: "Invalid input sent to portal",
+    5: "Please contact the Hostel Office",
+    6: "Remaining mess balance must be paid before booking",
+    7: "Food not available for the selected date/meal",
+    8: "Requested quantity exceeds what's allowed",
+    9: "Maximum token limit reached for this item",
+}
+
 
 @app.route("/book", methods=["POST"])
 def book():
@@ -353,7 +364,8 @@ def book():
                     msg = "Booked successfully"
                     success_count += 1
                 else:
-                    msg = f"Portal rejected booking: {result}"
+                    code = result.get("oresult")
+                    msg = ORESULT_MESSAGES.get(code, f"Portal rejected booking (code {code})")
                     failed_count += 1
 
             except req.exceptions.RequestException as e:
