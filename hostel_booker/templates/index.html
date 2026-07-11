@@ -53,6 +53,7 @@
       color: var(--text);
       line-height: 1.6;
       overflow-x: hidden;
+      max-width: 100vw;
       background-attachment: fixed;
     }
 
@@ -162,6 +163,8 @@
     .container {
       width: 100%;
       max-width: 1000px;
+      /* Prevent any child from punching past the viewport */
+      overflow-x: hidden;
     }
 
     /* ── Glass Components ───────────────────────────────────────── */
@@ -429,75 +432,41 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      .glass-card { padding: 25px; }
-      .header { flex-direction: column; text-align: center; gap: 20px; }
+      .glass-card { padding: 20px; }
+      .header { flex-direction: column; text-align: center; gap: 12px; margin-bottom: 20px; }
     }
-    
+
     @media (max-width: 600px) {
-        /* Main container */
-        .main-card, .container, [class*="card"] {
-            margin: 8px !important;
-            padding: 16px !important;
-            border-radius: 12px !important;
-        }
-        
-        /* Table responsive */
-        table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        
-        /* Dish rows - stack vertically on mobile */
-        [data-dish-name] {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 8px !important;
-            padding: 16px !important;
-            align-items: flex-start !important;
-        }
-        
-        /* Date pills - wrap properly */
-        .dates-container, [class*="dates"] {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            gap: 6px !important;
-        }
-        
-        /* Date pill size */
-        .date-pill, [class*="date-pill"] {
-            font-size: 11px !important;
-            padding: 4px 8px !important;
-        }
-        
-        /* Qty controls */
-        .qty-control {
-            justify-content: flex-start !important;
-        }
-        
-        /* Header */
-        header, nav {
-            padding: 12px 16px !important;
-        }
-        
-        /* Buttons */
-        .btn-group, [class*="btn-group"] {
-            flex-wrap: wrap !important;
-            gap: 8px !important;
-        }
-        
-        /* Preview table */
-        th, td {
-            padding: 8px 10px !important;
-            font-size: 13px !important;
-        }
-        
-        /* Booking results */
-        .result-row {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 4px !important;
-        }
+      /* ── Eliminate horizontal overflow ── */
+      /* Constrain block-level content without breaking SVG/fixed/absolute */
+      img, video, iframe, embed, object { max-width: 100%; height: auto; }
+
+      /* Page & container tightening */
+      .page { padding: 20px 12px 90px; }
+      .container { padding: 0; }
+      .glass-card { padding: 16px 14px !important; border-radius: 14px !important; overflow: hidden; }
+
+      /* Header compact */
+      .header { margin-bottom: 14px !important; gap: 10px !important; }
+      .logo-icon { width: 44px !important; height: 44px !important; font-size: 22px !important; }
+      .logo-text h1 { font-size: 1.1rem !important; }
+
+      /* Section header compact */
+      .section-header { margin-bottom: 10px; }
+      .section-title { font-size: 1rem !important; }
+      .section-subtitle { font-size: 0.72rem !important; line-height: 1.5; }
+
+      /* Quick-select row compact */
+      .quick-select-btn { padding: 6px 12px !important; font-size: 12px !important; min-height: 32px !important; }
+
+      /* Table — allow scroll within container but keep container in-bounds */
+      .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+      table { width: 100%; min-width: unset; }
+      th, td { padding: 8px 10px !important; font-size: 12px !important; white-space: normal !important; }
+
+      /* Booking results */
+      .result-row { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
+      .result-row .result-msg { text-align: left !important; white-space: normal !important; }
     }
     
     .hidden { display: none !important; }
@@ -698,6 +667,13 @@
   </div>
   </div>
 
+  <!-- Mobile-only fixed bottom bar for Preview button (shown via CSS on ≤600px) -->
+  <div id="previewBtn-fixed-bar">
+    <button type="button" class="btn btn-primary" onclick="submitPreview()">
+      Preview Bookings &rarr;
+    </button>
+  </div>
+
   <style>
     .dish-row {
       background: rgba(255,255,255,0.04);
@@ -713,14 +689,14 @@
     .dish-row.disabled { opacity: 0.5; }
     .dish-row.skipped { opacity: 0.35; }
 
-    .dish-name-col { flex: 1; min-width: 150px; }
-    .dish-name { font-size: 1rem; color: #fff; font-weight: 600; }
+    .dish-name-col { flex: 1; min-width: 0; }
+    .dish-name { font-size: 1rem; color: #fff; font-weight: 600; word-break: break-word; }
     .no-tokens-msg { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
     .max-qty-hint { font-size: 0.68rem; color: var(--text-dim); margin-top: 4px; }
 
     .dates-container {
       flex: 2;
-      min-width: 200px;
+      min-width: 0;
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
@@ -828,19 +804,59 @@
 
     /* ── Mobile tuning ─────────────────────────────────────────── */
     @media (max-width: 600px) {
-      .dish-row { flex-direction: column; align-items: stretch; }
-      .qty-control { justify-content: flex-start; }
-      .date-pill-toggle { min-height: 40px; padding: 8px 14px; }
-      .preview-cta-row { flex-direction: column-reverse; align-items: stretch; }
-      #previewBtn {
-        position: sticky;
-        bottom: 12px;
-        z-index: 5;
-        width: 100%;
-        padding: 16px;
-        font-size: 1rem;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      /* Compact dish rows */
+      .dish-row {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px 12px !important;
+        margin-bottom: 8px !important;
+        gap: 8px !important;
       }
+      .dish-name { font-size: 0.9rem !important; }
+      .max-qty-hint, .no-tokens-msg { font-size: 0.65rem !important; }
+
+      /* Date pills slightly smaller */
+      .date-pill-toggle {
+        min-height: 34px;
+        padding: 5px 10px;
+        font-size: 0.7rem !important;
+      }
+
+      /* Qty control left-aligned */
+      .qty-control { justify-content: flex-start; }
+
+      /* Hide the inline CTA row — button is now a fixed bar */
+      .preview-cta-row { display: none !important; }
+
+      /* Fixed "Preview Bookings" bar pinned to bottom of viewport */
+      #previewBtn-fixed-bar {
+        display: flex !important;
+      }
+    }
+
+    /* The fixed bar — hidden on desktop, shown on mobile via the rule above */
+    #previewBtn-fixed-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      padding: 12px 16px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      background: rgba(10, 22, 40, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    }
+    #previewBtn-fixed-bar button {
+      width: 100%;
+      padding: 15px;
+      font-size: 1rem;
+      border-radius: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
   </style>
 
