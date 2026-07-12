@@ -232,10 +232,11 @@ def login():
             return redirect(url_for("dashboard"))
         else:
             return render_template("index.html", view="login",
-                                   error="Invalid credentials.")
+                                   error="Incorrect roll number or password. Please try again.")
     except Exception as e:
+        print(f"[LOGIN] JSON parse failed — likely wrong credentials. Raw error: {e}")
         return render_template("index.html", view="login",
-                               error=f"Login error: {e}")
+                               error="Incorrect roll number or password. Please try again.")
 
 
 @app.route("/dashboard")
