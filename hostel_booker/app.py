@@ -11,7 +11,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 from flask import (
     Flask, render_template, request, redirect,
-    url_for, session, Response, stream_with_context
+    url_for, session, Response, stream_with_context, send_from_directory
 )
 import requests as req
 from bs4 import BeautifulSoup
@@ -256,6 +256,15 @@ def dashboard():
     rollno = session.get("rollno", "Unknown")
     return render_template("index.html", view="dashboard", dishes=dishes, rollno=rollno)
 
+@app.route("/manifest.json")
+def manifest():
+    return send_from_directory("static", "manifest.json", mimetype="application/manifest+json")
+
+@app.route("/sw.js")
+def service_worker():
+    resp = send_from_directory("static", "sw.js", mimetype="application/javascript")
+    resp.headers["Service-Worker-Allowed"] = "/"
+    return resp
 
 @app.route("/preview", methods=["POST"])
 def preview():

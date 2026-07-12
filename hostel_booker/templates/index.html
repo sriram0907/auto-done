@@ -7,12 +7,22 @@
   <title>PSG iTech Hostel Token Booker</title>
   <meta name="description"
     content="Automate hostel food token booking at PSG iTech — select dishes, preview, and confirm in seconds." />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#00897b" />
+  <link rel="apple-touch-icon" href="/static/icon-192.png" />
+  <link rel="icon" href="/static/icon-192.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <style>
     /* ── Reset & Modern Tokens ─────────────────────────────────────────── */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -24,15 +34,15 @@
       --glass-border: rgba(255, 255, 255, 0.1);
       --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       --glass-blur: blur(20px);
-      
+
       --primary: linear-gradient(135deg, #00c853 0%, #00897b 100%);
       --primary-glow: rgba(0, 200, 83, 0.4);
       --secondary: rgba(255, 255, 255, 0.1);
-      
+
       --text: #ffffff;
       --text-muted: rgba(255, 255, 255, 0.6);
       --text-dim: rgba(255, 255, 255, 0.4);
-      
+
       --success: #00e676;
       --error: #ff5252;
       --warning: #ffd740;
@@ -40,13 +50,14 @@
       --bf-grad: linear-gradient(135deg, #ff9100 0%, #ff6d00 100%);
       --lunch-grad: linear-gradient(135deg, #ffd600 0%, #ffab00 100%);
       --dinner-grad: linear-gradient(135deg, #7c4dff 0%, #651fff 100%);
-      
+
       --radius: 20px;
       --radius-sm: 12px;
       --trans: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html, body {
+    html,
+    body {
       height: 100%;
       font-family: 'Poppins', sans-serif;
       background: var(--bg-gradient);
@@ -76,70 +87,146 @@
     }
 
     @keyframes float {
-      from { transform: translateY(100vh) scale(1); opacity: 0; }
-      20% { opacity: 0.2; }
-      80% { opacity: 0.2; }
-      to { transform: translateY(-100px) scale(0.5); opacity: 0; }
+      from {
+        transform: translateY(100vh) scale(1);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.2;
+      }
+
+      80% {
+        opacity: 0.2;
+      }
+
+      to {
+        transform: translateY(-100px) scale(0.5);
+        opacity: 0;
+      }
     }
 
     /* ── Animations ────────────────────────────────────────────── */
     @keyframes fadeInSlideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes rowEntry {
-      from { opacity: 0; transform: translateX(-20px); }
-      to { opacity: 1; transform: translateX(0); }
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     @keyframes successGlow {
-      from { box-shadow: 0 0 0 rgba(0, 230, 118, 0); transform: translateX(-10px); opacity: 0; }
-      to { box-shadow: 0 0 15px rgba(0, 230, 118, 0.3); transform: translateX(0); opacity: 1; }
+      from {
+        box-shadow: 0 0 0 rgba(0, 230, 118, 0);
+        transform: translateX(-10px);
+        opacity: 0;
+      }
+
+      to {
+        box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     @keyframes errorGlow {
-      from { box-shadow: 0 0 0 rgba(255, 82, 82, 0); transform: translateX(-10px); opacity: 0; }
-      to { box-shadow: 0 0 15px rgba(255, 82, 82, 0.3); transform: translateX(0); opacity: 1; }
+      from {
+        box-shadow: 0 0 0 rgba(255, 82, 82, 0);
+        transform: translateX(-10px);
+        opacity: 0;
+      }
+
+      to {
+        box-shadow: 0 0 15px rgba(255, 82, 82, 0.3);
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(100%);
+      }
     }
 
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(0, 200, 83, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0); }
+      0% {
+        box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(0, 200, 83, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 200, 83, 0);
+      }
     }
 
     .skipped {
       opacity: 0.35 !important;
       transition: opacity 0.3s ease;
     }
+
     .skipped {
       opacity: 0.35 !important;
       transition: opacity 0.3s ease;
     }
+
     .skipped .dish-name {
       text-decoration: line-through;
       opacity: 0.6;
     }
+
     .skipped input {
       pointer-events: none;
       opacity: 0.5;
     }
 
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7); }
-      70%  { box-shadow: 0 0 0 10px rgba(0, 200, 83, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0); }
+      0% {
+        box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(0, 200, 83, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 200, 83, 0);
+      }
     }
 
     @keyframes rocketBounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
     }
 
     /* Hide default browser number-input spinners */
@@ -148,7 +235,10 @@
       -webkit-appearance: none;
       margin: 0;
     }
-    input[type=number] { -moz-appearance: textfield; }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
 
     /* ── Layout ─────────────────────────────────────────────────── */
     .page {
@@ -224,7 +314,9 @@
       filter: brightness(1.1);
     }
 
-    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
 
     .btn-secondary {
       background: var(--secondary);
@@ -245,7 +337,11 @@
       margin-bottom: 40px;
     }
 
-    .logo-group { display: flex; align-items: center; gap: 20px; }
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
     .logo-icon {
       width: 60px;
@@ -260,7 +356,15 @@
       animation: slowRotate 15s linear infinite;
     }
 
-    @keyframes slowRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes slowRotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     .logo-text h1 {
       font-size: 1.5rem;
@@ -278,7 +382,10 @@
       background: rgba(0, 0, 0, 0.2);
     }
 
-    table { width: 100%; border-collapse: collapse; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
     th {
       padding: 16px 24px;
@@ -290,11 +397,18 @@
       border-bottom: 1px solid var(--glass-border);
     }
 
-    td { padding: 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+    td {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
 
-    tr:hover { background: rgba(255, 255, 255, 0.03); }
+    tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
 
-    tr { animation: rowEntry 0.5s ease backwards; }
+    tr {
+      animation: rowEntry 0.5s ease backwards;
+    }
 
     /* ── Badges & Pills ────────────────────────────────────────── */
     .pill {
@@ -307,9 +421,23 @@
       gap: 6px;
     }
 
-    .pill-bf { background: var(--bf-grad); color: #fff; box-shadow: 0 4px 10px rgba(255, 145, 0, 0.3); }
-    .pill-lunch { background: var(--lunch-grad); color: #fff; box-shadow: 0 4px 10px rgba(255, 214, 0, 0.3); }
-    .pill-dinner { background: var(--dinner-grad); color: #fff; box-shadow: 0 4px 10px rgba(124, 77, 255, 0.3); }
+    .pill-bf {
+      background: var(--bf-grad);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(255, 145, 0, 0.3);
+    }
+
+    .pill-lunch {
+      background: var(--lunch-grad);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(255, 214, 0, 0.3);
+    }
+
+    .pill-dinner {
+      background: var(--dinner-grad);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(124, 77, 255, 0.3);
+    }
 
     .date-badge {
       background: rgba(0, 230, 118, 0.15);
@@ -341,13 +469,17 @@
 
     .progress-shimmer {
       position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
       animation: shimmer 1.5s infinite;
     }
 
     .pulse-dot {
-      width: 12px; height: 12px;
+      width: 12px;
+      height: 12px;
       background: #00e676;
       border-radius: 50%;
       box-shadow: 0 0 10px #00e676;
@@ -355,9 +487,20 @@
     }
 
     @keyframes pulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 230, 118, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(0, 230, 118, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 230, 118, 0);
+      }
     }
 
     /* ── Results Display ────────────────────────────────────────── */
@@ -370,14 +513,33 @@
       gap: 15px;
     }
 
-    .res-ok { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.2); animation: successGlow 0.5s ease both; }
-    .res-fail { background: rgba(255, 82, 82, 0.1); border: 1px solid rgba(255, 82, 82, 0.2); animation: errorGlow 0.5s ease both; }
+    .res-ok {
+      background: rgba(0, 230, 118, 0.1);
+      border: 1px solid rgba(0, 230, 118, 0.2);
+      animation: successGlow 0.5s ease both;
+    }
+
+    .res-fail {
+      background: rgba(255, 82, 82, 0.1);
+      border: 1px solid rgba(255, 82, 82, 0.2);
+      animation: errorGlow 0.5s ease both;
+    }
 
     /* ── Confetti ─────────────────────────────────────────────── */
     .confetti {
-      position: fixed; top: -10px; width: 10px; height: 10px; animation: confettiDrop 3s linear forwards;
+      position: fixed;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      animation: confettiDrop 3s linear forwards;
     }
-    @keyframes confettiDrop { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+
+    @keyframes confettiDrop {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
 
     /* ── Footer ─────────────────────────────────────────────────── */
     footer {
@@ -387,17 +549,44 @@
       font-size: 0.8rem;
     }
 
-    .heart { display: inline-block; color: #ff5252; animation: heartBeat 1.2s infinite; }
-    @keyframes heartBeat {
-      0% { transform: scale(1); }
-      15% { transform: scale(1.3); }
-      30% { transform: scale(1); }
-      45% { transform: scale(1.3); }
-      70% { transform: scale(1); }
+    .heart {
+      display: inline-block;
+      color: #ff5252;
+      animation: heartBeat 1.2s infinite;
     }
+
+    @keyframes heartBeat {
+      0% {
+        transform: scale(1);
+      }
+
+      15% {
+        transform: scale(1.3);
+      }
+
+      30% {
+        transform: scale(1);
+      }
+
+      45% {
+        transform: scale(1.3);
+      }
+
+      70% {
+        transform: scale(1);
+      }
+    }
+
     @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.3); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.3);
+      }
     }
 
     /* ── Result Rows ─────────────────────────────────────────────*/
@@ -411,64 +600,206 @@
       border-radius: 12px;
       animation: slideInLeft 0.3s ease-out;
     }
-    .result-row .result-icon { flex-shrink: 0; font-size: 1.2rem; }
-    .result-row .result-info { flex: 1; min-width: 0; }
-    .result-row .result-dish { font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .result-row .result-detail { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-    .result-row .result-msg { flex-shrink: 0; font-size: 0.8rem; font-weight: 600; text-align: right; white-space: nowrap; }
-    .res-ok  { background: rgba(0,200,83,0.12); border: 1px solid rgba(0,200,83,0.25); }
-    .res-ok  .result-msg { color: #00e676; }
-    .res-fail{ background: rgba(255,82,82,0.12); border: 1px solid rgba(255,82,82,0.25); }
-    .res-fail .result-msg { color: #ff5252; }
+
+    .result-row .result-icon {
+      flex-shrink: 0;
+      font-size: 1.2rem;
+    }
+
+    .result-row .result-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .result-row .result-dish {
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .result-row .result-detail {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .result-row .result-msg {
+      flex-shrink: 0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .res-ok {
+      background: rgba(0, 200, 83, 0.12);
+      border: 1px solid rgba(0, 200, 83, 0.25);
+    }
+
+    .res-ok .result-msg {
+      color: #00e676;
+    }
+
+    .res-fail {
+      background: rgba(255, 82, 82, 0.12);
+      border: 1px solid rgba(255, 82, 82, 0.25);
+    }
+
+    .res-fail .result-msg {
+      color: #ff5252;
+    }
 
     /* ── Login Logic Specifics ─────────────────────────────────── */
-    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .login-card { width: 100%; max-width: 440px; }
-    .login-title { text-align: center; margin-bottom: 40px; }
-    .login-title h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-    .form-group { margin-bottom: 25px; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 10px; }
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .login-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .login-title h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
 
     /* Responsive */
     @media (max-width: 768px) {
-      .glass-card { padding: 20px; }
-      .header { flex-direction: column; text-align: center; gap: 12px; margin-bottom: 20px; }
+      .glass-card {
+        padding: 20px;
+      }
+
+      .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
     }
 
     @media (max-width: 600px) {
+
       /* ── Eliminate horizontal overflow ── */
       /* Constrain block-level content without breaking SVG/fixed/absolute */
-      img, video, iframe, embed, object { max-width: 100%; height: auto; }
+      img,
+      video,
+      iframe,
+      embed,
+      object {
+        max-width: 100%;
+        height: auto;
+      }
 
       /* Page & container tightening */
-      .page { padding: 20px 12px 90px; }
-      .container { padding: 0; }
-      .glass-card { padding: 16px 14px !important; border-radius: 14px !important; overflow: hidden; }
+      .page {
+        padding: 20px 12px 90px;
+      }
+
+      .container {
+        padding: 0;
+      }
+
+      .glass-card {
+        padding: 16px 14px !important;
+        border-radius: 14px !important;
+        overflow: hidden;
+      }
 
       /* Header compact */
-      .header { margin-bottom: 14px !important; gap: 10px !important; }
-      .logo-icon { width: 44px !important; height: 44px !important; font-size: 22px !important; }
-      .logo-text h1 { font-size: 1.1rem !important; }
+      .header {
+        margin-bottom: 14px !important;
+        gap: 10px !important;
+      }
+
+      .logo-icon {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 22px !important;
+      }
+
+      .logo-text h1 {
+        font-size: 1.1rem !important;
+      }
 
       /* Section header compact */
-      .section-header { margin-bottom: 10px; }
-      .section-title { font-size: 1rem !important; }
-      .section-subtitle { font-size: 0.72rem !important; line-height: 1.5; }
+      .section-header {
+        margin-bottom: 10px;
+      }
+
+      .section-title {
+        font-size: 1rem !important;
+      }
+
+      .section-subtitle {
+        font-size: 0.72rem !important;
+        line-height: 1.5;
+      }
 
       /* Quick-select row compact */
-      .quick-select-btn { padding: 6px 12px !important; font-size: 12px !important; min-height: 32px !important; }
+      .quick-select-btn {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        min-height: 32px !important;
+      }
 
       /* Table — allow scroll within container but keep container in-bounds */
-      .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
-      table { width: 100%; min-width: unset; }
-      th, td { padding: 8px 10px !important; font-size: 12px !important; white-space: normal !important; }
+      .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+      }
+
+      table {
+        width: 100%;
+        min-width: unset;
+      }
+
+      th,
+      td {
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        white-space: normal !important;
+      }
 
       /* Booking results */
-      .result-row { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
-      .result-row .result-msg { text-align: left !important; white-space: normal !important; }
+      .result-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+      }
+
+      .result-row .result-msg {
+        text-align: left !important;
+        white-space: normal !important;
+      }
     }
-    
+
     /* ── Booking scroll panel (preview page) ─────────────────── */
     .booking-scroll-panel {
       max-height: 52vh;
@@ -480,16 +811,40 @@
       margin-bottom: 20px;
       /* Custom scrollbar */
       scrollbar-width: thin;
-      scrollbar-color: rgba(0,200,83,0.4) rgba(255,255,255,0.05);
+      scrollbar-color: rgba(0, 200, 83, 0.4) rgba(255, 255, 255, 0.05);
     }
-    .booking-scroll-panel::-webkit-scrollbar { width: 6px; height: 6px; }
-    .booking-scroll-panel::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 6px; }
-    .booking-scroll-panel::-webkit-scrollbar-thumb { background: rgba(0,200,83,0.4); border-radius: 6px; }
-    .booking-scroll-panel::-webkit-scrollbar-thumb:hover { background: rgba(0,200,83,0.7); }
+
+    .booking-scroll-panel::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .booking-scroll-panel::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+    }
+
+    .booking-scroll-panel::-webkit-scrollbar-thumb {
+      background: rgba(0, 200, 83, 0.4);
+      border-radius: 6px;
+    }
+
+    .booking-scroll-panel::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 200, 83, 0.7);
+    }
 
     /* Sticky header inside the scroll panel */
-    .booking-scroll-panel table { width: 100%; border-collapse: collapse; }
-    .booking-scroll-panel thead tr { position: sticky; top: 0; z-index: 2; }
+    .booking-scroll-panel table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .booking-scroll-panel thead tr {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
     .booking-scroll-panel thead th {
       background: rgba(10, 22, 40, 0.97);
       backdrop-filter: blur(8px);
@@ -505,6 +860,7 @@
       align-items: stretch;
       margin-top: 4px;
     }
+
     .preview-edit-link {
       display: inline-flex;
       align-items: center;
@@ -518,7 +874,11 @@
       transition: color var(--trans);
       align-self: center;
     }
-    .preview-edit-link:hover { color: #fff; }
+
+    .preview-edit-link:hover {
+      color: #fff;
+    }
+
     .preview-confirm-btn {
       width: 100%;
       padding: 16px;
@@ -526,13 +886,17 @@
       font-weight: 700;
       letter-spacing: 0.5px;
       border-radius: 14px;
-      box-shadow: 0 6px 24px rgba(0,200,83,0.35);
+      box-shadow: 0 6px 24px rgba(0, 200, 83, 0.35);
     }
+
     .preview-confirm-btn:hover {
-      box-shadow: 0 10px 32px rgba(0,200,83,0.5);
+      box-shadow: 0 10px 32px rgba(0, 200, 83, 0.5);
       transform: translateY(-1px);
     }
-    .preview-confirm-btn:active { transform: translateY(0); }
+
+    .preview-confirm-btn:active {
+      transform: translateY(0);
+    }
 
     /* Count label tightening */
     .preview-count {
@@ -540,14 +904,26 @@
       color: var(--text-muted);
       margin-bottom: 10px;
     }
-    .preview-count strong { color: #00e676; font-size: 1rem; }
 
-    @media (max-width: 600px) {
-      .booking-scroll-panel { max-height: 46vh; }
-      .preview-confirm-btn { font-size: 1rem; padding: 15px; }
+    .preview-count strong {
+      color: #00e676;
+      font-size: 1rem;
     }
 
-    .hidden { display: none !important; }
+    @media (max-width: 600px) {
+      .booking-scroll-panel {
+        max-height: 46vh;
+      }
+
+      .preview-confirm-btn {
+        font-size: 1rem;
+        padding: 15px;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
 
@@ -575,25 +951,23 @@
       <form method="POST" action="/login" id="loginForm">
         <div class="form-group">
           <label for="rollno">Roll Number</label>
-          <input type="text" id="rollno" name="rollno" class="glass-input" placeholder="Enter your roll number" autocomplete="username"
-            inputmode="numeric" required style="width:100%;" />
+          <input type="text" id="rollno" name="rollno" class="glass-input" placeholder="Enter your roll number"
+            autocomplete="username" inputmode="numeric" required style="width:100%;" />
         </div>
         <div class="form-group">
           <label for="password">Portal Password</label>
           <div style="position:relative;">
-            <input type="password" id="password" name="password" class="glass-input" placeholder="Enter your portal password"
-              autocomplete="current-password" required
+            <input type="password" id="password" name="password" class="glass-input"
+              placeholder="Enter your portal password" autocomplete="current-password" required
               style="width:100%; padding-right:44px;" />
-            <button type="button" id="eyeBtn" onclick="togglePassword()"
-              style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;
+            <button type="button" id="eyeBtn" onclick="togglePassword()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;
                      cursor:pointer;color:#666;padding:4px;line-height:0;transition:color 0.2s;"
-              onmouseover="this.style.color='#00c853'"
-              onmouseout="this.style.color='#666'"
+              onmouseover="this.style.color='#00c853'" onmouseout="this.style.color='#666'"
               aria-label="Toggle password">
               <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
             </button>
           </div>
@@ -675,25 +1049,25 @@
             <span style="color: rgba(255,255,255,0.5); font-size: 13px; letter-spacing: 0.5px;">Quick select:</span>
 
             <button onclick="setAllQty(1)" class="quick-select-btn quick-select-primary">
-                ✅ Set All to 1
+              ✅ Set All to 1
             </button>
 
             <button onclick="setAllQty(0)" class="quick-select-btn quick-select-secondary">
-                ⬜ Set All to 0
+              ⬜ Set All to 0
             </button>
           </div>
 
-          <p id="bookingCount" style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0 0 20px 0;">0 dishes selected for booking</p>
+          <p id="bookingCount" style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0 0 20px 0;">0 dishes
+            selected for booking</p>
 
-        <div id="dishTable">
-          {% for i, dish in dishes | enumerate %}
-          {% set has_dates = dish.dates | length > 0 %}
-          {% set bookable = has_dates and dish.has_tokens %}
-          <div class="dish-row {% if not bookable %}disabled{% endif %}" id="row_{{ i }}"
-            data-dish-name="{{ dish.name }}"
-            data-max-qty="{{ dish.max_qty }}">
+          <div id="dishTable">
+            {% for i, dish in dishes | enumerate %}
+            {% set has_dates = dish.dates | length > 0 %}
+            {% set bookable = has_dates and dish.has_tokens %}
+            <div class="dish-row {% if not bookable %}disabled{% endif %}" id="row_{{ i }}"
+              data-dish-name="{{ dish.name }}" data-max-qty="{{ dish.max_qty }}">
 
-            <div class="dish-name-col">
+              <div class="dish-name-col">
                 <div class="dish-name">{{ dish.name }}</div>
                 {% if not dish.has_tokens %}
                 <div class="no-tokens-msg">No tokens this cycle</div>
@@ -701,12 +1075,13 @@
                 {% if bookable %}
                 <div class="max-qty-hint">Max {{ dish.max_qty }} per booking</div>
                 {% endif %}
-            </div>
+              </div>
 
-            <div class="dates-container">
+              <div class="dates-container">
                 {% if has_dates and dish.has_tokens %}
                 {% for d in dish.dates %}
-                <button type="button" class="date-pill-toggle selected meal-{{ d.meal | lower }}" data-date="{{ d.date }}" onclick="toggleDatePill(this)">
+                <button type="button" class="date-pill-toggle selected meal-{{ d.meal | lower }}"
+                  data-date="{{ d.date }}" onclick="toggleDatePill(this)">
                   <span class="pill-date">{{ d.date[:5] }}</span>
                   <span class="pill-day">{{ d.day }}</span>
                 </button>
@@ -714,35 +1089,38 @@
                 {% elif not dish.has_tokens %}
                 <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No tokens</span>
                 {% else %}
-                <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No dates available</span>
+                <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No dates
+                  available</span>
                 {% endif %}
-            </div>
+              </div>
 
-            <div class="qty-control">
+              <div class="qty-control">
                 <div class="qty-control-inner">
-                  <button onclick="changeQty(this,-1)" {% if not bookable %}disabled{% endif %} class="qty-btn qty-btn-minus">−</button>
-                  <input type="number" name="dish_qty_{{ i }}" value="{% if bookable %}1{% else %}0{% endif %}"
-                    min="0" max="{{ dish.max_qty }}" class="qty-input" data-idx="{{ i }}" {% if not bookable %}disabled{% endif %}
-                    oninput="updateRowState(this)" />
-                  <button onclick="changeQty(this,1)" {% if not bookable %}disabled{% endif %} class="qty-btn qty-btn-plus">+</button>
+                  <button onclick="changeQty(this,-1)" {% if not bookable %}disabled{% endif %}
+                    class="qty-btn qty-btn-minus">−</button>
+                  <input type="number" name="dish_qty_{{ i }}" value="{% if bookable %}1{% else %}0{% endif %}" min="0"
+                    max="{{ dish.max_qty }}" class="qty-input" data-idx="{{ i }}" {% if not bookable %}disabled{% endif
+                    %} oninput="updateRowState(this)" />
+                  <button onclick="changeQty(this,1)" {% if not bookable %}disabled{% endif %}
+                    class="qty-btn qty-btn-plus">+</button>
                 </div>
                 <span class="skip-badge hidden" id="skip_{{ i }}">SKIP</span>
+              </div>
+
             </div>
-
+            {% endfor %}
           </div>
-          {% endfor %}
-        </div>
 
-        <div class="preview-cta-row">
-          <p class="text-muted" id="selectedCount"></p>
-          <button type="button" class="btn btn-primary" id="previewBtn" onclick="submitPreview()">
-            Preview Bookings &rarr;
-          </button>
+          <div class="preview-cta-row">
+            <p class="text-muted" id="selectedCount"></p>
+            <button type="button" class="btn btn-primary" id="previewBtn" onclick="submitPreview()">
+              Preview Bookings &rarr;
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div>
+    </div>
   </div>
 
   <!-- Mobile-only fixed bottom bar for Preview button (shown via CSS on ≤600px) -->
@@ -754,8 +1132,8 @@
 
   <style>
     .dish-row {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 12px;
@@ -764,13 +1142,38 @@
       gap: 16px;
       flex-wrap: wrap;
     }
-    .dish-row.disabled { opacity: 0.5; }
-    .dish-row.skipped { opacity: 0.35; }
 
-    .dish-name-col { flex: 1; min-width: 0; }
-    .dish-name { font-size: 1rem; color: #fff; font-weight: 600; word-break: break-word; }
-    .no-tokens-msg { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
-    .max-qty-hint { font-size: 0.68rem; color: var(--text-dim); margin-top: 4px; }
+    .dish-row.disabled {
+      opacity: 0.5;
+    }
+
+    .dish-row.skipped {
+      opacity: 0.35;
+    }
+
+    .dish-name-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .dish-name {
+      font-size: 1rem;
+      color: #fff;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .no-tokens-msg {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .max-qty-hint {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
 
     .dates-container {
       flex: 2;
@@ -784,8 +1187,8 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      background: rgba(0,230,118,0.15);
-      border: 1px solid rgba(0,230,118,0.35);
+      background: rgba(0, 230, 118, 0.15);
+      border: 1px solid rgba(0, 230, 118, 0.35);
       color: #00e676;
       padding: 8px 12px;
       border-radius: 20px;
@@ -797,15 +1200,21 @@
       transition: all 0.15s ease;
       -webkit-tap-highlight-color: transparent;
     }
-    .date-pill-toggle .pill-day { opacity: 0.75; font-weight: 500; }
+
+    .date-pill-toggle .pill-day {
+      opacity: 0.75;
+      font-weight: 500;
+    }
+
     .date-pill-toggle.selected {
-      background: rgba(0,230,118,0.15);
-      border-color: rgba(0,230,118,0.35);
+      background: rgba(0, 230, 118, 0.15);
+      border-color: rgba(0, 230, 118, 0.35);
       color: #00e676;
     }
+
     .date-pill-toggle:not(.selected) {
-      background: rgba(255,255,255,0.04);
-      border-color: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.1);
       color: var(--text-dim);
       text-decoration: line-through;
     }
@@ -816,15 +1225,17 @@
       align-items: center;
       gap: 10px;
     }
+
     .qty-control-inner {
       display: flex;
       align-items: center;
       gap: 0;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
       padding: 4px 8px;
     }
+
     .qty-btn {
       width: 32px;
       height: 32px;
@@ -837,8 +1248,17 @@
       justify-content: center;
       line-height: 1;
     }
-    .qty-btn-minus { background: rgba(255,255,255,0.1); color: white; }
-    .qty-btn-plus { background: rgba(0,200,83,0.2); color: #00c853; }
+
+    .qty-btn-minus {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .qty-btn-plus {
+      background: rgba(0, 200, 83, 0.2);
+      color: #00c853;
+    }
+
     .qty-input {
       width: 36px;
       text-align: center;
@@ -861,15 +1281,17 @@
       letter-spacing: 0.5px;
       min-height: 36px;
     }
+
     .quick-select-primary {
       background: var(--primary);
       color: white;
       box-shadow: 0 4px 15px var(--primary-glow);
     }
+
     .quick-select-secondary {
-      background: rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.7);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .preview-cta-row {
@@ -882,6 +1304,7 @@
 
     /* ── Mobile tuning ─────────────────────────────────────────── */
     @media (max-width: 600px) {
+
       /* Compact dish rows */
       .dish-row {
         flex-direction: column;
@@ -890,8 +1313,15 @@
         margin-bottom: 8px !important;
         gap: 8px !important;
       }
-      .dish-name { font-size: 0.9rem !important; }
-      .max-qty-hint, .no-tokens-msg { font-size: 0.65rem !important; }
+
+      .dish-name {
+        font-size: 0.9rem !important;
+      }
+
+      .max-qty-hint,
+      .no-tokens-msg {
+        font-size: 0.65rem !important;
+      }
 
       /* Date pills slightly smaller */
       .date-pill-toggle {
@@ -901,10 +1331,14 @@
       }
 
       /* Qty control left-aligned */
-      .qty-control { justify-content: flex-start; }
+      .qty-control {
+        justify-content: flex-start;
+      }
 
       /* Hide the inline CTA row — button is now a fixed bar */
-      .preview-cta-row { display: none !important; }
+      .preview-cta-row {
+        display: none !important;
+      }
 
       /* Fixed "Preview Bookings" bar pinned to bottom of viewport */
       #previewBtn-fixed-bar {
@@ -925,9 +1359,10 @@
       background: rgba(10, 22, 40, 0.92);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
     }
+
     #previewBtn-fixed-bar button {
       width: 100%;
       padding: 15px;
@@ -1091,15 +1526,17 @@
                 <td style="color:var(--text-dim); text-align:center;">{{ loop.index }}</td>
                 <td class="dish-name" style="color:#fff;">{{ b.name }}</td>
                 <td>
-                  <span class="date-badge" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">{{ b.date }}</span>
+                  <span class="date-badge"
+                    style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">{{
+                    b.date }}</span>
                 </td>
                 <td>
                   {% if b.meal == 'Breakfast' %}
-                    <span class="pill pill-bf">🌅 Breakfast</span>
+                  <span class="pill pill-bf">🌅 Breakfast</span>
                   {% elif b.meal == 'Lunch' %}
-                    <span class="pill pill-lunch">☀️ Lunch</span>
+                  <span class="pill pill-lunch">☀️ Lunch</span>
                   {% else %}
-                    <span class="pill pill-dinner">🌙 Dinner</span>
+                  <span class="pill pill-dinner">🌙 Dinner</span>
                   {% endif %}
                 </td>
                 <td style="text-align:center;">{{ b.qty }}</td>
@@ -1123,7 +1560,8 @@
 
 
         <!-- Booking progress section (hidden until booking starts) -->
-        <div id="bookingSection" class="hidden" style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.08);">
+        <div id="bookingSection" class="hidden"
+          style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.08);">
 
           <!-- Big can't-miss banner -->
           <div id="bookingBanner" style="
@@ -1147,7 +1585,9 @@
 
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
             <div class="pulse-dot"></div>
-            <span style="font-size:0.85rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Live Status</span>
+            <span
+              style="font-size:0.85rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Live
+              Status</span>
           </div>
 
           <div class="progress-wrap">
@@ -1167,18 +1607,23 @@
         <div id="summarySection" class="hidden mt-24">
           <div class="section-title" style="margin-bottom:16px;">Booking Complete 🎉</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
-            <div style="background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.3);border-radius:16px;padding:24px;text-align:center;">
+            <div
+              style="background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.3);border-radius:16px;padding:24px;text-align:center;">
               <div style="font-size:48px;font-weight:800;color:#00e676;" id="summaryOk">0</div>
               <div style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:4px;">✅ Booked Successfully</div>
             </div>
-            <div style="background:rgba(255,82,82,0.1);border:1px solid rgba(255,82,82,0.3);border-radius:16px;padding:24px;text-align:center;">
+            <div
+              style="background:rgba(255,82,82,0.1);border:1px solid rgba(255,82,82,0.3);border-radius:16px;padding:24px;text-align:center;">
               <div style="font-size:48px;font-weight:800;color:#ff5252;" id="summaryFail">0</div>
               <div style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:4px;">❌ Failed</div>
             </div>
           </div>
           <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;padding-bottom:16px;">
-            <a href="/dashboard" style="padding:12px 32px;background:linear-gradient(135deg,#00c853,#00897b);color:white;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;box-shadow:0 4px 20px rgba(0,200,83,0.3);">📅 Book More</a>
-            <a href="/logout" style="padding:12px 32px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-weight:600;text-decoration:none;font-size:15px;">Logout</a>
+            <a href="/dashboard"
+              style="padding:12px 32px;background:linear-gradient(135deg,#00c853,#00897b);color:white;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;box-shadow:0 4px 20px rgba(0,200,83,0.3);">📅
+              Book More</a>
+            <a href="/logout"
+              style="padding:12px 32px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-weight:600;text-decoration:none;font-size:15px;">Logout</a>
           </div>
         </div>
 
@@ -1244,7 +1689,7 @@
             document.getElementById('summaryFail').textContent = obj.failed;
             document.getElementById('summarySection').classList.remove('hidden');
             document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            
+
             if (obj.success > 0) {
               triggerConfetti();
             }
@@ -1293,7 +1738,7 @@
         const c = document.createElement('div');
         c.className = 'confetti';
         c.style.left = Math.random() * 100 + 'vw';
-        c.style.backgroundColor = ['#00e676', '#00c853', '#fff', '#ffd600'][Math.floor(Math.random()*4)];
+        c.style.backgroundColor = ['#00e676', '#00c853', '#fff', '#ffd600'][Math.floor(Math.random() * 4)];
         c.style.width = Math.random() * 8 + 4 + 'px';
         c.style.height = c.style.width;
         c.style.animationDuration = Math.random() * 2 + 2 + 's';
@@ -1316,8 +1761,80 @@
   {% endif %}
 
   <footer style="text-align:center;padding:24px 20px;margin-top:40px;border-top:1px solid rgba(255,255,255,0.1);">
-    <span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Made by Sriram R</span>
+    <span
+      style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Made
+      by Sriram R</span>
   </footer>
+  <!-- ── PWA: install as app ─────────────────────────────────────────── -->
+  <style>
+    #installAppBtn {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    #installAppBtn.show {
+      display: flex;
+    }
+  </style>
+
+  <button id="installAppBtn" onclick="triggerInstallPrompt()">
+    📲 Install App
+  </button>
+
+  <script>
+    // Register the service worker (required for install prompt eligibility)
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").catch((err) => {
+          console.warn("Service worker registration failed:", err);
+        });
+      });
+    }
+
+    // Defer the browser's default install banner and show our own button instead
+    let deferredInstallPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      const btn = document.getElementById("installAppBtn");
+      if (btn) btn.classList.add("show");
+    });
+
+    function triggerInstallPrompt() {
+      const btn = document.getElementById("installAppBtn");
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(() => {
+        deferredInstallPrompt = null;
+        if (btn) btn.classList.remove("show");
+      });
+    }
+
+    // Hide the button once installed
+    window.addEventListener("appinstalled", () => {
+      const btn = document.getElementById("installAppBtn");
+      if (btn) btn.classList.remove("show");
+      deferredInstallPrompt = null;
+    });
+  </script>
 
 </body>
 
