@@ -8,7 +8,7 @@
   <meta name="description"
     content="Automate hostel food token booking at PSG iTech — select dishes, preview, and confirm in seconds." />
   <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#00897b" />
+  <meta name="theme-color" content="#0d9488" />
   <link rel="apple-touch-icon" href="/static/icon-192.png" />
   <link rel="icon" href="/static/icon-192.png" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -29,31 +29,32 @@
     }
 
     :root {
-      --bg-gradient: linear-gradient(135deg, #0a1628 0%, #0d2137 50%, #0a1628 100%);
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      --glass-blur: blur(20px);
+      --bg-gradient: #f7f8fa;
+      --glass-bg: #ffffff;
+      --glass-border: #e5e7eb;
+      --glass-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+      --glass-blur: none;
 
-      --primary: linear-gradient(135deg, #00c853 0%, #00897b 100%);
-      --primary-glow: rgba(0, 200, 83, 0.4);
-      --secondary: rgba(255, 255, 255, 0.1);
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --primary-glow: rgba(13,148,136,0.15);
+      --secondary: #f3f4f6;
 
-      --text: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.6);
-      --text-dim: rgba(255, 255, 255, 0.4);
+      --text: #111827;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
 
-      --success: #00e676;
-      --error: #ff5252;
-      --warning: #ffd740;
+      --success: #059669;
+      --error: #dc2626;
+      --warning: #d97706;
 
-      --bf-grad: linear-gradient(135deg, #ff9100 0%, #ff6d00 100%);
-      --lunch-grad: linear-gradient(135deg, #ffd600 0%, #ffab00 100%);
-      --dinner-grad: linear-gradient(135deg, #7c4dff 0%, #651fff 100%);
+      --bf-grad: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+      --lunch-grad: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      --dinner-grad: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
 
-      --radius: 20px;
-      --radius-sm: 12px;
-      --trans: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --trans: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     html,
@@ -62,12 +63,10 @@
       min-height: 100%;
       font-family: 'Poppins', sans-serif;
       background: var(--bg-gradient);
-      background-color: #0a1628;
-      /* solid fallback so overscroll/bounce never reveals white */
+      background-color: #f7f8fa;
       color: var(--text);
       line-height: 1.6;
       overflow-x: hidden;
-      background-attachment: fixed;
       overscroll-behavior-y: none;
     }
 
@@ -84,7 +83,7 @@
 
     .particle {
       position: absolute;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(13, 148, 136, 0.06);
       border-radius: 50%;
       animation: float 20s linear infinite;
     }
@@ -136,13 +135,11 @@
 
     @keyframes successGlow {
       from {
-        box-shadow: 0 0 0 rgba(0, 230, 118, 0);
         transform: translateX(-10px);
         opacity: 0;
       }
 
       to {
-        box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
         transform: translateX(0);
         opacity: 1;
       }
@@ -150,13 +147,11 @@
 
     @keyframes errorGlow {
       from {
-        box-shadow: 0 0 0 rgba(255, 82, 82, 0);
         transform: translateX(-10px);
         opacity: 0;
       }
 
       to {
-        box-shadow: 0 0 15px rgba(255, 82, 82, 0.3);
         transform: translateX(0);
         opacity: 1;
       }
@@ -174,15 +169,15 @@
 
     @keyframes pulse {
       0% {
-        box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+        box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.5);
       }
 
       70% {
-        box-shadow: 0 0 0 10px rgba(0, 200, 83, 0);
+        box-shadow: 0 0 0 8px rgba(13, 148, 136, 0);
       }
 
       100% {
-        box-shadow: 0 0 0 0 rgba(0, 200, 83, 0);
+        box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
       }
     }
 
@@ -208,15 +203,15 @@
 
     @keyframes pulse {
       0% {
-        box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+        box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.5);
       }
 
       70% {
-        box-shadow: 0 0 0 10px rgba(0, 200, 83, 0);
+        box-shadow: 0 0 0 8px rgba(13, 148, 136, 0);
       }
 
       100% {
-        box-shadow: 0 0 0 0 rgba(0, 200, 83, 0);
+        box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
       }
     }
 
@@ -260,10 +255,9 @@
       overflow-x: hidden;
     }
 
-    /* ── Glass Components ───────────────────────────────────────── */
+    /* ── Card Components ─────────────────────────────────────────── */
     .glass-card {
       background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
       border: 1px solid var(--glass-border);
       box-shadow: var(--glass-shadow);
       border-radius: var(--radius);
@@ -273,20 +267,20 @@
     }
 
     .glass-input {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #fff;
+      border: 1px solid #d1d5db;
       border-radius: var(--radius-sm);
       padding: 14px 18px;
-      color: #fff;
+      color: var(--text);
       font-family: inherit;
       transition: all var(--trans);
     }
 
     .glass-input:focus {
       outline: none;
-      border-color: #00e676;
-      box-shadow: 0 0 15px rgba(0, 230, 118, 0.2);
-      background: rgba(255, 255, 255, 0.12);
+      border-color: #0d9488;
+      box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+      background: #fff;
     }
 
     /* ── Buttons ────────────────────────────────────────────────── */
@@ -308,28 +302,29 @@
     .btn-primary {
       background: var(--primary);
       color: #fff;
-      box-shadow: 0 10px 20px var(--primary-glow);
+      box-shadow: none;
     }
 
     .btn-primary:hover {
-      transform: scale(1.02);
-      box-shadow: 0 15px 30px var(--primary-glow);
-      filter: brightness(1.1);
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(13,148,136,0.2);
     }
 
     .btn-primary:active {
-      transform: scale(0.98);
+      transform: translateY(0);
     }
 
     .btn-secondary {
       background: var(--secondary);
-      color: #fff;
+      color: var(--text-muted);
       border: 1px solid var(--glass-border);
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: #e9eaec;
+      border-color: #d1d5db;
+      color: var(--text);
     }
 
     /* ── Header Redesign ───────────────────────────────────────── */
@@ -349,40 +344,27 @@
     .logo-icon {
       width: 60px;
       height: 60px;
-      background: var(--primary);
+      background: #e6f4f2;
       border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 32px;
-      box-shadow: 0 0 25px var(--primary-glow);
-      animation: slowRotate 15s linear infinite;
-    }
-
-    @keyframes slowRotate {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
+      box-shadow: none;
     }
 
     .logo-text h1 {
       font-size: 1.5rem;
       font-weight: 800;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 0%, #aaa 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--text);
     }
 
     /* ── Table Styling ─────────────────────────────────────────── */
     .table-container {
       overflow-x: auto;
       border-radius: var(--radius-sm);
-      background: rgba(0, 0, 0, 0.2);
+      background: #fff;
     }
 
     table {
@@ -402,11 +384,11 @@
 
     td {
       padding: 20px 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid #f3f4f6;
     }
 
     tr:hover {
-      background: rgba(255, 255, 255, 0.03);
+      background: #f9fafb;
     }
 
     tr {
@@ -425,27 +407,27 @@
     }
 
     .pill-bf {
-      background: var(--bf-grad);
-      color: #fff;
-      box-shadow: 0 4px 10px rgba(255, 145, 0, 0.3);
+      background: #fff3eb;
+      color: #c2410c;
+      border: 1px solid #fed7aa;
     }
 
     .pill-lunch {
-      background: var(--lunch-grad);
-      color: #fff;
-      box-shadow: 0 4px 10px rgba(255, 214, 0, 0.3);
+      background: #fffbeb;
+      color: #92400e;
+      border: 1px solid #fde68a;
     }
 
     .pill-dinner {
-      background: var(--dinner-grad);
-      color: #fff;
-      box-shadow: 0 4px 10px rgba(124, 77, 255, 0.3);
+      background: #ede9fe;
+      color: #4338ca;
+      border: 1px solid #c4b5fd;
     }
 
     .date-badge {
-      background: rgba(0, 230, 118, 0.15);
-      border: 1px solid rgba(0, 230, 118, 0.2);
-      color: #00e676;
+      background: #f0fdf9;
+      border: 1px solid #99f6e4;
+      color: #0f766e;
       padding: 4px 12px;
       border-radius: 20px;
       font-size: 0.75rem;
@@ -455,8 +437,8 @@
 
     /* ── Progress Indicators ────────────────────────────────────── */
     .progress-wrap {
-      height: 12px;
-      background: rgba(255, 255, 255, 0.05);
+      height: 8px;
+      background: #e5e7eb;
       border-radius: 10px;
       overflow: hidden;
       position: relative;
@@ -476,33 +458,32 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
       animation: shimmer 1.5s infinite;
     }
 
     .pulse-dot {
-      width: 12px;
-      height: 12px;
-      background: #00e676;
+      width: 10px;
+      height: 10px;
+      background: #0d9488;
       border-radius: 50%;
-      box-shadow: 0 0 10px #00e676;
       animation: pulse 1.5s infinite;
     }
 
     @keyframes pulse {
       0% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7);
+        box-shadow: 0 0 0 0 rgba(13,148,136,0.5);
       }
 
       70% {
         transform: scale(1);
-        box-shadow: 0 0 0 10px rgba(0, 230, 118, 0);
+        box-shadow: 0 0 0 8px rgba(13,148,136,0);
       }
 
       100% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(0, 230, 118, 0);
+        box-shadow: 0 0 0 0 rgba(13,148,136,0);
       }
     }
 
@@ -517,15 +498,15 @@
     }
 
     .res-ok {
-      background: rgba(0, 230, 118, 0.1);
-      border: 1px solid rgba(0, 230, 118, 0.2);
-      animation: successGlow 0.5s ease both;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      animation: successGlow 0.4s ease both;
     }
 
     .res-fail {
-      background: rgba(255, 82, 82, 0.1);
-      border: 1px solid rgba(255, 82, 82, 0.2);
-      animation: errorGlow 0.5s ease both;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      animation: errorGlow 0.4s ease both;
     }
 
     /* ── Confetti ─────────────────────────────────────────────── */
@@ -548,13 +529,12 @@
     footer {
       padding: 60px 20px;
       text-align: center;
-      opacity: 0.4;
       font-size: 0.8rem;
     }
 
     .heart {
       display: inline-block;
-      color: #ff5252;
+      color: #f87171;
       animation: heartBeat 1.2s infinite;
     }
 
@@ -616,7 +596,7 @@
 
     .result-row .result-dish {
       font-weight: 600;
-      color: #fff;
+      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -637,21 +617,21 @@
     }
 
     .res-ok {
-      background: rgba(0, 200, 83, 0.12);
-      border: 1px solid rgba(0, 200, 83, 0.25);
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
     }
 
     .res-ok .result-msg {
-      color: #00e676;
+      color: #059669;
     }
 
     .res-fail {
-      background: rgba(255, 82, 82, 0.12);
-      border: 1px solid rgba(255, 82, 82, 0.25);
+      background: #fef2f2;
+      border: 1px solid #fecaca;
     }
 
     .res-fail .result-msg {
-      color: #ff5252;
+      color: #dc2626;
     }
 
     /* ── Login Logic Specifics ─────────────────────────────────── */
@@ -688,7 +668,7 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: var(--text-dim);
+      color: var(--text-muted);
       margin-bottom: 10px;
     }
 
@@ -810,11 +790,11 @@
       overflow-x: auto;
       border-radius: var(--radius-sm);
       border: 1px solid var(--glass-border);
-      background: rgba(0, 0, 0, 0.2);
+      background: #fff;
       margin-bottom: 20px;
       /* Custom scrollbar */
       scrollbar-width: thin;
-      scrollbar-color: rgba(0, 200, 83, 0.4) rgba(255, 255, 255, 0.05);
+      scrollbar-color: #d1d5db #f3f4f6;
     }
 
     .booking-scroll-panel::-webkit-scrollbar {
@@ -823,17 +803,17 @@
     }
 
     .booking-scroll-panel::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
+      background: #f3f4f6;
       border-radius: 6px;
     }
 
     .booking-scroll-panel::-webkit-scrollbar-thumb {
-      background: rgba(0, 200, 83, 0.4);
+      background: #d1d5db;
       border-radius: 6px;
     }
 
     .booking-scroll-panel::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 200, 83, 0.7);
+      background: #9ca3af;
     }
 
     /* Sticky header inside the scroll panel */
@@ -849,9 +829,7 @@
     }
 
     .booking-scroll-panel thead th {
-      background: rgba(10, 22, 40, 0.97);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: #f9fafb;
       border-bottom: 1px solid var(--glass-border);
     }
 
@@ -879,7 +857,7 @@
     }
 
     .preview-edit-link:hover {
-      color: #fff;
+      color: var(--text);
     }
 
     .preview-confirm-btn {
@@ -889,11 +867,11 @@
       font-weight: 700;
       letter-spacing: 0.5px;
       border-radius: 14px;
-      box-shadow: 0 6px 24px rgba(0, 200, 83, 0.35);
+      box-shadow: none;
     }
 
     .preview-confirm-btn:hover {
-      box-shadow: 0 10px 32px rgba(0, 200, 83, 0.5);
+      box-shadow: 0 4px 16px rgba(13,148,136,0.2);
       transform: translateY(-1px);
     }
 
@@ -909,7 +887,7 @@
     }
 
     .preview-count strong {
-      color: #00e676;
+      color: #0d9488;
       font-size: 1rem;
     }
 
@@ -1040,7 +1018,10 @@
             <p style="font-size: 0.8rem; color: var(--text-muted);">PSG iTech · Roll No: {{ rollno }}</p>
           </div>
         </div>
-        <a href="/logout" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">⏻ Logout</a>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <a href="/tokens" class="btn btn-secondary" style="padding: 8px 14px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:6px;">🎟️ My Tokens</a>
+          <a href="/logout" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">⏻ Logout</a>
+        </div>
       </div>
 
       <div class="glass-card">
@@ -1054,7 +1035,7 @@
           </div>
           <!-- Quick Select Buttons -->
           <div style="display: flex; gap: 12px; margin: 16px 0 12px 0; align-items: center; flex-wrap: wrap;">
-            <span style="color: rgba(255,255,255,0.5); font-size: 13px; letter-spacing: 0.5px;">Quick select:</span>
+            <span style="color: var(--text-dim); font-size: 13px; letter-spacing: 0.5px;">Quick select:</span>
 
             <button onclick="setAllQty(1)" class="quick-select-btn quick-select-primary">
               ✅ Set All to 1
@@ -1065,7 +1046,7 @@
             </button>
           </div>
 
-          <p id="bookingCount" style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0 0 20px 0;">0 dishes
+          <p id="bookingCount" style="color: var(--text-dim); font-size: 13px; margin: 0 0 20px 0;">0 dishes
             selected for booking</p>
 
           <div id="dishTable">
@@ -1095,9 +1076,9 @@
                 </button>
                 {% endfor %}
                 {% elif not dish.has_tokens %}
-                <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No tokens</span>
+                <span class="pill" style="background: #f3f4f6; color: var(--text-dim); border: 1px solid #e5e7eb;">No tokens</span>
                 {% else %}
-                <span class="pill" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">No dates
+                <span class="pill" style="background: #f3f4f6; color: var(--text-dim); border: 1px solid #e5e7eb;">No dates
                   available</span>
                 {% endif %}
               </div>
@@ -1140,8 +1121,8 @@
 
   <style>
     .dish-row {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #fff;
+      border: 1px solid #e5e7eb;
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 12px;
@@ -1156,7 +1137,7 @@
     }
 
     .dish-row.skipped {
-      opacity: 0.35;
+      opacity: 0.45;
     }
 
     .dish-name-col {
@@ -1166,7 +1147,7 @@
 
     .dish-name {
       font-size: 1rem;
-      color: #fff;
+      color: var(--text);
       font-weight: 600;
       word-break: break-word;
     }
@@ -1195,9 +1176,9 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      background: rgba(0, 230, 118, 0.15);
-      border: 1px solid rgba(0, 230, 118, 0.35);
-      color: #00e676;
+      background: #f0fdf9;
+      border: 1px solid #99f6e4;
+      color: #0f766e;
       padding: 8px 12px;
       border-radius: 20px;
       font-size: 0.75rem;
@@ -1215,15 +1196,15 @@
     }
 
     .date-pill-toggle.selected {
-      background: rgba(0, 230, 118, 0.15);
-      border-color: rgba(0, 230, 118, 0.35);
-      color: #00e676;
+      background: #f0fdf9;
+      border-color: #5eead4;
+      color: #0f766e;
     }
 
     .date-pill-toggle:not(.selected) {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.1);
-      color: var(--text-dim);
+      background: #f9fafb;
+      border-color: #e5e7eb;
+      color: #9ca3af;
       text-decoration: line-through;
     }
 
@@ -1238,8 +1219,8 @@
       display: flex;
       align-items: center;
       gap: 0;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
       border-radius: 12px;
       padding: 4px 8px;
     }
@@ -1258,13 +1239,13 @@
     }
 
     .qty-btn-minus {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
+      background: #e5e7eb;
+      color: var(--text-muted);
     }
 
     .qty-btn-plus {
-      background: rgba(0, 200, 83, 0.2);
-      color: #00c853;
+      background: #d1fae5;
+      color: #059669;
     }
 
     .qty-input {
@@ -1272,7 +1253,7 @@
       text-align: center;
       background: transparent;
       border: none;
-      color: white;
+      color: var(--text);
       font-size: 16px;
       font-weight: 600;
       outline: none;
@@ -1293,13 +1274,13 @@
     .quick-select-primary {
       background: var(--primary);
       color: white;
-      box-shadow: 0 4px 15px var(--primary-glow);
+      box-shadow: none;
     }
 
     .quick-select-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #f3f4f6;
+      color: var(--text-muted);
+      border: 1px solid #e5e7eb;
     }
 
     .preview-cta-row {
@@ -1364,11 +1345,11 @@
       z-index: 9999;
       padding: 12px 16px;
       padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-      background: rgba(10, 22, 40, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+      background: rgba(247,248,250,0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid #e5e7eb;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
     }
 
     #previewBtn-fixed-bar button {
@@ -1532,10 +1513,9 @@
               {% for b in bookings %}
               <tr style="animation-delay: {{ loop.index0 * 0.03 }}s;">
                 <td style="color:var(--text-dim); text-align:center;">{{ loop.index }}</td>
-                <td class="dish-name" style="color:#fff;">{{ b.name }}</td>
+                <td class="dish-name" style="color:var(--text);">{{ b.name }}</td>
                 <td>
-                  <span class="date-badge"
-                    style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--glass-border);">{{
+                  <span class="date-badge">{{
                     b.date }}</span>
                 </td>
                 <td>
@@ -1569,23 +1549,22 @@
 
         <!-- Booking progress section (hidden until booking starts) -->
         <div id="bookingSection" class="hidden"
-          style="margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.08);">
+          style="margin-top:48px;padding-top:32px;border-top:1px solid #e5e7eb;">
 
           <!-- Big can't-miss banner -->
           <div id="bookingBanner" style="
-            background: linear-gradient(135deg, rgba(0,200,83,0.2), rgba(0,137,123,0.2));
-            border: 2px solid rgba(0,200,83,0.5);
+            background: #f0fdf9;
+            border: 1px solid #99f6e4;
             border-radius: 16px;
             padding: 24px;
             text-align: center;
             margin-bottom: 24px;
-            box-shadow: 0 0 30px rgba(0,200,83,0.15);
           ">
-            <div style="font-size:22px;font-weight:800;color:#00e676;margin-bottom:8px;">
+            <div style="font-size:22px;font-weight:700;color:#0d9488;margin-bottom:8px;">
               <span style="display:inline-block;animation:rocketBounce 1.5s ease-in-out infinite;">🚀</span>
               Booking is running in the background!
             </div>
-            <div style="font-size:15px;color:rgba(255,255,255,0.85);font-weight:500;line-height:1.6;">
+            <div style="font-size:15px;color:#374151;font-weight:500;line-height:1.6;">
               ✅ You can minimize this tab and go do your thing<br>
               📱 Safe to lock your screen — we'll book everything for you 😊
             </div>
@@ -1594,8 +1573,7 @@
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
             <div class="pulse-dot"></div>
             <span
-              style="font-size:0.85rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Live
-              Status</span>
+              style="font-size:0.85rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Live Status</span>
           </div>
 
           <div class="progress-wrap">
@@ -1613,32 +1591,32 @@
 
         <!-- Summary (hidden until done) -->
         <div id="summarySection" class="hidden mt-24">
-          <div class="section-title" style="margin-bottom:16px;">Booking Complete 🎉</div>
+          <div class="section-title" style="margin-bottom:16px;color:var(--text);">Booking Complete 🎉</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
             <div
-              style="background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.3);border-radius:16px;padding:24px;text-align:center;">
-              <div style="font-size:48px;font-weight:800;color:#00e676;" id="summaryOk">0</div>
-              <div style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:4px;">✅ Booked Successfully</div>
+              style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:24px;text-align:center;">
+              <div style="font-size:48px;font-weight:800;color:#059669;" id="summaryOk">0</div>
+              <div style="color:#374151;font-size:14px;margin-top:4px;">✅ Booked Successfully</div>
             </div>
             <div
-              style="background:rgba(255,82,82,0.1);border:1px solid rgba(255,82,82,0.3);border-radius:16px;padding:24px;text-align:center;">
-              <div style="font-size:48px;font-weight:800;color:#ff5252;" id="summaryFail">0</div>
-              <div style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:4px;">❌ Failed</div>
+              style="background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:24px;text-align:center;">
+              <div style="font-size:48px;font-weight:800;color:#dc2626;" id="summaryFail">0</div>
+              <div style="color:#374151;font-size:14px;margin-top:4px;">❌ Failed</div>
             </div>
           </div>
           <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;padding-bottom:16px;">
             <a href="/dashboard"
-              style="padding:12px 32px;background:linear-gradient(135deg,#00c853,#00897b);color:white;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;box-shadow:0 4px 20px rgba(0,200,83,0.3);">📅
+              style="padding:12px 32px;background:#0d9488;color:white;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;">📅
               Book More</a>
             <a href="/logout"
-              style="padding:12px 32px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:12px;font-weight:600;text-decoration:none;font-size:15px;">Logout</a>
+              style="padding:12px 32px;background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:12px;font-weight:600;text-decoration:none;font-size:15px;">Logout</a>
           </div>
         </div>
 
         {% else %}
         <div style="text-align:center;padding:40px 0;color:var(--text-muted);">
           <p style="font-size:2rem;margin-bottom:12px;">🫙</p>
-          <p>No dishes were selected. <a href="/dashboard" style="color:var(--green-glow);">Go back</a> and check at
+          <p>No dishes were selected. <a href="/dashboard" style="color:#0d9488;">Go back</a> and check at
             least one dish.</p>
         </div>
         {% endif %}
@@ -1766,35 +1744,310 @@
     {% endif %}
   </script>
 
+
+  {# ════════════════════════════════════════════════════════ TOKENS VIEW #}
+  {% elif view == 'tokens' %}
+  <style>
+    /* ── Tokens View ──────────────────────────────────────────────── */
+    .tokens-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .tokens-empty p:first-child { font-size: 2.5rem; margin-bottom: 12px; }
+    .tokens-empty p:last-child  { font-size: 0.95rem; }
+
+    .token-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .token-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: box-shadow 0.2s;
+    }
+    .token-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+    .token-meal-badge {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    .token-meal-badge.bf     { background: #fff3eb; }
+    .token-meal-badge.lunch  { background: #fffbeb; }
+    .token-meal-badge.dinner { background: #ede9fe; }
+
+    .token-info { flex: 1; min-width: 0; }
+    .token-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .token-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .token-meta-sep { color: #d1d5db; }
+
+    .token-qty-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f0fdf9;
+      border: 1px solid #99f6e4;
+      color: #0f766e;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .token-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .token-status-badge.active {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #059669;
+    }
+    .token-status-badge.inactive {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #9ca3af;
+    }
+
+    .token-cancel-btn {
+      flex-shrink: 0;
+      padding: 7px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      color: #dc2626;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .token-cancel-btn:hover:not(:disabled) {
+      background: #fee2e2;
+      border-color: #fca5a5;
+    }
+    .token-cancel-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .token-inline-msg {
+      font-size: 0.75rem;
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: none;
+    }
+    .token-inline-msg.error {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+    }
+    .token-inline-msg.success {
+      display: block;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #059669;
+    }
+
+    @media (max-width: 600px) {
+      .token-card {
+        flex-wrap: wrap;
+        padding: 12px 14px;
+        gap: 10px;
+      }
+      .token-name { font-size: 0.88rem; }
+      .token-cancel-btn { width: 100%; text-align: center; }
+    }
+  </style>
+
+  <div class="page">
+    <div class="container">
+
+      <div class="header">
+        <div class="logo-group">
+          <div class="logo-icon">🍽️</div>
+          <div class="logo-text">
+            <h1>My Booked Tokens</h1>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">PSG iTech · Roll No: {{ rollno }}</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <a href="/dashboard" class="btn btn-secondary" style="padding: 8px 14px; font-size: 0.8rem;">← Book More</a>
+          <a href="/logout" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">⏻ Logout</a>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="section-header" style="margin-bottom:20px;">
+          <div>
+            <div class="section-title">Booked Tokens</div>
+            <div class="section-subtitle">Active tokens you've reserved. Cancellation is irreversible — the slot may not be re-bookable.</div>
+          </div>
+        </div>
+
+        {% if booked %}
+        <div class="token-list" id="tokenList">
+          {% for t in booked %}
+          {% set meal_lc = t.MEALTIME | lower %}
+          <div class="token-card" id="tcard_{{ loop.index0 }}">
+
+            <div class="token-meal-badge {% if 'breakfast' in meal_lc %}bf{% elif 'lunch' in meal_lc %}lunch{% else %}dinner{% endif %}">
+              {% if 'breakfast' in meal_lc %}🌅
+              {% elif 'lunch' in meal_lc %}☀️
+              {% else %}🌙{% endif %}
+            </div>
+
+            <div class="token-info">
+              <div class="token-name" title="{{ t.TOKEN_NAME }}">{{ t.TOKEN_NAME }}</div>
+              <div class="token-meta">
+                <span>📅 {{ t.ExpireDate }}</span>
+                <span class="token-meta-sep">·</span>
+                <span>{{ t.MEALTIME }}</span>
+                <span class="token-meta-sep">·</span>
+                <span class="token-qty-badge">×{{ t.TOKEN_QTY }}</span>
+                <span class="token-status-badge {% if t.Status == 'Y' %}active{% else %}inactive{% endif %}">
+                  {% if t.Status == 'Y' %}✓ Active{% else %}✗ Inactive{% endif %}
+                </span>
+              </div>
+              <div class="token-inline-msg" id="tmsg_{{ loop.index0 }}"></div>
+            </div>
+
+            <button
+              class="token-cancel-btn"
+              id="tcbtn_{{ loop.index0 }}"
+              onclick="cancelToken({{ loop.index0 }}, {{ t.TOKEN_NAME | tojson }}, {{ t.ExpireDate | tojson }}, {{ t.MEALTIME | tojson }}, {{ t.TOKEN_QTY | tojson }})"
+            >Cancel</button>
+
+          </div>
+          {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="tokens-empty">
+          <p>🎟️</p>
+          <p>No active tokens found.<br>
+            <a href="/dashboard" style="color:#0d9488;">Go book some dishes</a> first.
+          </p>
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function cancelToken(idx, dishName, date, meal, qty) {
+      const label = `${qty}× ${dishName} for ${date} (${meal})`;
+      if (!confirm(`Cancel ${label}?\n\nThis cannot be undone.`)) return;
+
+      const btn  = document.getElementById('tcbtn_' + idx);
+      const msg  = document.getElementById('tmsg_' + idx);
+      const card = document.getElementById('tcard_' + idx);
+
+      btn.disabled = true;
+      btn.textContent = 'Cancelling…';
+      msg.className = 'token-inline-msg';
+      msg.style.display = 'none';
+
+      fetch('/cancel-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dish_name: dishName, date: date, meal: meal })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.ok) {
+          card.style.transition = 'opacity 0.3s, transform 0.3s';
+          card.style.opacity = '0';
+          card.style.transform = 'translateX(20px)';
+          setTimeout(() => {
+            card.remove();
+            const list = document.getElementById('tokenList');
+            if (list && list.children.length === 0) {
+              list.outerHTML = '<div class="tokens-empty"><p>🎟️</p><p>All tokens cancelled. <a href="/dashboard" style="color:#0d9488;">Book more</a>.</p></div>';
+            }
+          }, 320);
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Cancel';
+          msg.textContent = data.msg || 'Something went wrong. Try again.';
+          msg.className = 'token-inline-msg error';
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.textContent = 'Cancel';
+        msg.textContent = 'Network error: ' + err.message;
+        msg.className = 'token-inline-msg error';
+      });
+    }
+  </script>
+
   {% endif %}
 
-  <footer style="text-align:center;padding:24px 20px;margin-top:40px;border-top:1px solid rgba(255,255,255,0.1);">
+  <footer style="text-align:center;padding:24px 20px;margin-top:40px;border-top:1px solid #e5e7eb;">
     <span
-      style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Made
+      style="color:#d1d5db;font-size:0.68rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;">Made
       by Sriram R</span>
   </footer>
   <!-- ── PWA: install as app ─────────────────────────────────────────── -->
   <style>
     #installAppBtn {
       position: fixed;
-      bottom: 16px;
-      left: 16px;
+      bottom: 80px;
       right: 16px;
       z-index: 999;
       display: none;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      background: var(--primary);
+      gap: 8px;
+      background: #0d9488;
       color: #fff;
       border: none;
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 50px;
+      padding: 10px 16px;
       font-family: 'Poppins', sans-serif;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.8rem;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 2px 8px rgba(13,148,136,0.25);
+      white-space: nowrap;
     }
 
     #installAppBtn.show {

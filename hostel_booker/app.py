@@ -409,3 +409,64 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
+def get_booked_tokens(s):
+    """Fetch the student's currently booked (unconsumed) tokens."""
+    resp = s.post(
+        f"{BASE_URL}/Student/StudENTGetToken",
+        data={"rollno": session.get("rollno", "")},
+        headers=PORTAL_HEADERS,
+        timeout=20,
+    )
+    resp.raise_for_status()
+    try:
+        return resp.json()
+    except Exception:
+        return []
+
+
+@app.route("/tokens")
+def tokens():
+    if not session.get("portal_cookies"):
+        return redirect(url_for("index"))
+    s = build_requests_session()
+    booked = get_booked_tokens(s)
+    save_session_cookies(s)
+    return render_template("index.html", view="tokens", booked=booked,
+                           rollno=session.get("rollno", "Unknown"))
+
+
+@app.route("/cancel-token", methods=["POST"])
+def cancel_token():
+    if not session.get("portal_cookies"):
+        return {"ok": False, "msg": "Not authenticated"}, 401
+
+    data = request.get_json(force=True, silent=True) or {}
+    dish_name = data.get("dish_name", "")
+    date = data.get("date", "")
+    meal = data.get("meal", "")
+
+    s = build_requests_session()
+    payload = {
+        "rollno": session.get("rollno", ""),
+        "Tokenno": "View",
+        "ISSUE_DATE": dish_name,
+        "TOKEN_ID": date,
+        "MEALTIME[]": meal,
+    }
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Requested-With": "XMLHttpRequest",
+        "Referer": f"{BASE_URL}/Student/StudentView",
+    }
+    try:
+        resp = s.post(f"{BASE_URL}/Student/StudentTokenBulkCancel",
+                      data=payload, headers=headers, timeout=15)
+        resp.raise_for_status()
+        result = resp.json()
+        save_session_cookies(s)
+        if result.get("oresult") == 0:
+            return {"ok": True, "msg": "Cancelled successfully"}
+        return {"ok": False, "msg": f"Portal rejected cancellation (code {result.get('oresult')})"}
+    except Exception as e:
+        return {"ok": False, "msg": str(e)[:200]}
