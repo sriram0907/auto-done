@@ -32,12 +32,12 @@
       --bg-gradient: #f7f8fa;
       --glass-bg: #ffffff;
       --glass-border: #e5e7eb;
-      --glass-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+      --glass-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06);
       --glass-blur: none;
 
       --primary: #0d9488;
       --primary-hover: #0f766e;
-      --primary-glow: rgba(13,148,136,0.15);
+      --primary-glow: rgba(13, 148, 136, 0.15);
       --secondary: #f3f4f6;
 
       --text: #111827;
@@ -279,7 +279,7 @@
     .glass-input:focus {
       outline: none;
       border-color: #0d9488;
-      box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
       background: #fff;
     }
 
@@ -308,7 +308,7 @@
     .btn-primary:hover {
       background: var(--primary-hover);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(13,148,136,0.2);
+      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
     }
 
     .btn-primary:active {
@@ -458,7 +458,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
       animation: shimmer 1.5s infinite;
     }
 
@@ -473,17 +473,17 @@
     @keyframes pulse {
       0% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(13,148,136,0.5);
+        box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.5);
       }
 
       70% {
         transform: scale(1);
-        box-shadow: 0 0 0 8px rgba(13,148,136,0);
+        box-shadow: 0 0 0 8px rgba(13, 148, 136, 0);
       }
 
       100% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(13,148,136,0);
+        box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
       }
     }
 
@@ -871,7 +871,7 @@
     }
 
     .preview-confirm-btn:hover {
-      box-shadow: 0 4px 16px rgba(13,148,136,0.2);
+      box-shadow: 0 4px 16px rgba(13, 148, 136, 0.2);
       transform: translateY(-1px);
     }
 
@@ -1019,7 +1019,9 @@
           </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;">
-          <a href="/tokens" class="btn btn-secondary" style="padding: 8px 14px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:6px;">🎟️ My Tokens</a>
+          <a href="/tokens" class="btn btn-secondary"
+            style="padding: 8px 14px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:6px;">🎟️ My
+            Tokens</a>
           <a href="/logout" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">⏻ Logout</a>
         </div>
       </div>
@@ -1076,9 +1078,11 @@
                 </button>
                 {% endfor %}
                 {% elif not dish.has_tokens %}
-                <span class="pill" style="background: #f3f4f6; color: var(--text-dim); border: 1px solid #e5e7eb;">No tokens</span>
+                <span class="pill" style="background: #f3f4f6; color: var(--text-dim); border: 1px solid #e5e7eb;">No
+                  tokens</span>
                 {% else %}
-                <span class="pill" style="background: #f3f4f6; color: var(--text-dim); border: 1px solid #e5e7eb;">No dates
+                <span class="pill" style="background: #f3f4f6; color: var(--text-dim); border: 1px solid #e5e7eb;">No
+                  dates
                   available</span>
                 {% endif %}
               </div>
@@ -1345,11 +1349,11 @@
       z-index: 9999;
       padding: 12px 16px;
       padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-      background: rgba(247,248,250,0.96);
+      background: rgba(247, 248, 250, 0.96);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border-top: 1px solid #e5e7eb;
-      box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
     }
 
     #previewBtn-fixed-bar button {
@@ -1548,8 +1552,7 @@
 
 
         <!-- Booking progress section (hidden until booking starts) -->
-        <div id="bookingSection" class="hidden"
-          style="margin-top:48px;padding-top:32px;border-top:1px solid #e5e7eb;">
+        <div id="bookingSection" class="hidden" style="margin-top:48px;padding-top:32px;border-top:1px solid #e5e7eb;">
 
           <!-- Big can't-miss banner -->
           <div id="bookingBanner" style="
@@ -1573,7 +1576,8 @@
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
             <div class="pulse-dot"></div>
             <span
-              style="font-size:0.85rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Live Status</span>
+              style="font-size:0.85rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Live
+              Status</span>
           </div>
 
           <div class="progress-wrap">
@@ -1593,13 +1597,11 @@
         <div id="summarySection" class="hidden mt-24">
           <div class="section-title" style="margin-bottom:16px;color:var(--text);">Booking Complete 🎉</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
-            <div
-              style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:24px;text-align:center;">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:24px;text-align:center;">
               <div style="font-size:48px;font-weight:800;color:#059669;" id="summaryOk">0</div>
               <div style="color:#374151;font-size:14px;margin-top:4px;">✅ Booked Successfully</div>
             </div>
-            <div
-              style="background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:24px;text-align:center;">
+            <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:24px;text-align:center;">
               <div style="font-size:48px;font-weight:800;color:#dc2626;" id="summaryFail">0</div>
               <div style="color:#374151;font-size:14px;margin-top:4px;">❌ Failed</div>
             </div>
@@ -1754,8 +1756,15 @@
       padding: 60px 20px;
       color: var(--text-muted);
     }
-    .tokens-empty p:first-child { font-size: 2.5rem; margin-bottom: 12px; }
-    .tokens-empty p:last-child  { font-size: 0.95rem; }
+
+    .tokens-empty p:first-child {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .tokens-empty p:last-child {
+      font-size: 0.95rem;
+    }
 
     .token-list {
       display: flex;
@@ -1763,63 +1772,115 @@
       gap: 10px;
     }
 
+    /* ── Card shell with meal-accent left border ──────────────── */
     .token-card {
       display: flex;
       align-items: center;
+      /* vertically center icon with whole block */
       gap: 16px;
       background: #fff;
       border: 1px solid #e5e7eb;
+      border-left-width: 4px;
+      /* accent stripe */
+      border-left-color: #e5e7eb;
+      /* default, overridden per meal */
       border-radius: 12px;
-      padding: 16px 20px;
-      transition: box-shadow 0.2s;
+      padding: 14px 18px 14px 16px;
+      transition: box-shadow 0.22s ease, transform 0.22s ease;
     }
-    .token-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
 
+    /* Subtle lift on hover */
+    .token-card:hover {
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.10);
+      transform: translateY(-2px);
+    }
+
+    /* Meal-type left-border accents */
+    .token-card.meal-bf {
+      border-left-color: #fb923c;
+    }
+
+    .token-card.meal-lunch {
+      border-left-color: #4ade80;
+    }
+
+    .token-card.meal-dinner {
+      border-left-color: #818cf8;
+    }
+
+    /* ── Meal icon tile ──────────────────────────────────────── */
     .token-meal-badge {
       flex-shrink: 0;
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.3rem;
     }
-    .token-meal-badge.bf     { background: #fff3eb; }
-    .token-meal-badge.lunch  { background: #fffbeb; }
-    .token-meal-badge.dinner { background: #ede9fe; }
 
-    .token-info { flex: 1; min-width: 0; }
+    .token-meal-badge.bf {
+      background: #fff3eb;
+    }
+
+    .token-meal-badge.lunch {
+      background: #f0fdf4;
+    }
+
+    .token-meal-badge.dinner {
+      background: #ede9fe;
+    }
+
+    /* ── Text block ──────────────────────────────────────────── */
+    .token-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Dish name — clear primary text */
     .token-name {
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 1.02rem;
+      font-weight: 700;
       color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      letter-spacing: -0.1px;
+      line-height: 1.3;
     }
+
+    /* Secondary meta row — lighter, spaced-out */
     .token-meta {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
+      font-weight: 400;
       color: var(--text-muted);
-      margin-top: 3px;
+      letter-spacing: 0.35px;
+      margin-top: 5px;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
     }
-    .token-meta-sep { color: #d1d5db; }
 
+    .token-meta-sep {
+      color: #d1d5db;
+      user-select: none;
+    }
+
+    /* ── Pill chips ──────────────────────────────────────────── */
     .token-qty-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      background: #f0fdf9;
-      border: 1px solid #99f6e4;
-      color: #0f766e;
+      gap: 3px;
+      background: #ecfdf5;
+      border: 1.5px solid #6ee7b7;
+      color: #047857;
       border-radius: 20px;
-      padding: 2px 10px;
+      padding: 2px 9px 2px 7px;
       font-size: 0.72rem;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.2px;
     }
 
     .token-status-badge {
@@ -1827,41 +1888,57 @@
       align-items: center;
       gap: 4px;
       border-radius: 20px;
-      padding: 2px 10px;
-      font-size: 0.72rem;
-      font-weight: 600;
-    }
-    .token-status-badge.active {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      color: #059669;
-    }
-    .token-status-badge.inactive {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      color: #9ca3af;
+      padding: 2px 9px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
     }
 
+    .token-status-badge.active {
+      background: #dcfce7;
+      border: 1.5px solid #86efac;
+      color: #166534;
+    }
+
+    .token-status-badge.inactive {
+      background: #f3f4f6;
+      border: 1.5px solid #d1d5db;
+      color: #6b7280;
+    }
+
+    /* ── Cancel button — real destructive action ─────────────── */
     .token-cancel-btn {
       flex-shrink: 0;
-      padding: 7px 14px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      border-radius: 8px;
-      border: 1px solid #fecaca;
+      padding: 8px 18px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 9px;
+      border: 1.5px solid #fca5a5;
       background: #fef2f2;
-      color: #dc2626;
+      color: #b91c1c;
       cursor: pointer;
       font-family: inherit;
-      transition: background 0.15s, border-color 0.15s;
+      letter-spacing: 0.2px;
+      transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
       white-space: nowrap;
+      margin-left: 4px;
+      /* breathing room from card edge */
     }
+
     .token-cancel-btn:hover:not(:disabled) {
       background: #fee2e2;
-      border-color: #fca5a5;
+      border-color: #f87171;
+      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.18);
+      transform: translateY(-1px);
     }
+
+    .token-cancel-btn:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
     .token-cancel-btn:disabled {
-      opacity: 0.55;
+      opacity: 0.5;
       cursor: not-allowed;
     }
 
@@ -1872,12 +1949,14 @@
       border-radius: 6px;
       display: none;
     }
+
     .token-inline-msg.error {
       display: block;
       background: #fef2f2;
       border: 1px solid #fecaca;
       color: #dc2626;
     }
+
     .token-inline-msg.success {
       display: block;
       background: #f0fdf4;
@@ -1888,11 +1967,213 @@
     @media (max-width: 600px) {
       .token-card {
         flex-wrap: wrap;
-        padding: 12px 14px;
+        padding: 12px 14px 12px 12px;
         gap: 10px;
       }
-      .token-name { font-size: 0.88rem; }
-      .token-cancel-btn { width: 100%; text-align: center; }
+
+      .token-name {
+        font-size: 0.92rem;
+      }
+
+      .token-cancel-btn {
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
+      }
+    }
+
+    /* ── Custom confirmation modal ──────────────────────────────── */
+    .tc-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.40);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .tc-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .tc-modal {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.14);
+      padding: 32px 28px 24px;
+      max-width: 420px;
+      width: 100%;
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .tc-overlay.open .tc-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .tc-modal-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    .tc-modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .tc-modal-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .tc-modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .tc-modal-actions button {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+      border: none;
+    }
+
+    .tc-btn-keep {
+      background: #f3f4f6;
+      color: var(--text-muted);
+      border: 1.5px solid #e5e7eb !important;
+    }
+
+    .tc-btn-keep:hover {
+      background: #e9eaec;
+      color: var(--text);
+    }
+
+    .tc-btn-confirm {
+      background: #dc2626;
+      color: #fff;
+    }
+
+    .tc-btn-confirm:hover {
+      background: #b91c1c;
+      box-shadow: 0 3px 10px rgba(220, 38, 38, 0.28);
+      transform: translateY(-1px);
+    }
+
+    .tc-btn-confirm:active {
+      transform: translateY(0);
+    }
+
+    /* ── Cancel-All button ──────────────────────────────────────── */
+    .cancel-all-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: 9px;
+      border: 1.5px solid #fca5a5;
+      background: #fef2f2;
+      color: #b91c1c;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.1px;
+      transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+      white-space: nowrap;
+    }
+
+    .cancel-all-btn:hover:not(:disabled) {
+      background: #fee2e2;
+      border-color: #f87171;
+      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.16);
+    }
+
+    .cancel-all-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ── Batch-cancel progress strip ────────────────────────────── */
+    #batchProgress {
+      display: none;
+      margin-top: 18px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    #batchProgress.visible {
+      display: block;
+    }
+
+    .batch-status-line {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      min-height: 1.2em;
+    }
+
+    .batch-progress-wrap {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .batch-progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      border-radius: 6px;
+      transition: width 0.3s ease;
+    }
+
+    .batch-result-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .batch-result-item {
+      font-size: 0.76rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .batch-result-item.ok {
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .batch-result-item.fail {
+      background: #fef2f2;
+      color: #b91c1c;
     }
   </style>
 
@@ -1917,17 +2198,35 @@
         <div class="section-header" style="margin-bottom:20px;">
           <div>
             <div class="section-title">Booked Tokens</div>
-            <div class="section-subtitle">Active tokens you've reserved. Cancellation is irreversible — the slot may not be re-bookable.</div>
+            <div class="section-subtitle">Active tokens you've reserved. Cancellation is irreversible — the slot may not
+              be re-bookable.</div>
           </div>
+          {% if booked %}
+          <button class="cancel-all-btn" id="cancelAllBtn" onclick="openCancelAllModal()">
+            🗑 Cancel All
+          </button>
+          {% endif %}
+        </div>
+
+        <!-- Batch-cancel progress strip (hidden until Cancel All runs) -->
+        <div id="batchProgress">
+          <div class="batch-status-line" id="batchStatusLine">Preparing…</div>
+          <div class="batch-progress-wrap">
+            <div class="batch-progress-bar" id="batchProgressBar"></div>
+          </div>
+          <div class="batch-result-list" id="batchResultList"></div>
         </div>
 
         {% if booked %}
         <div class="token-list" id="tokenList">
           {% for t in booked %}
           {% set meal_lc = t.MEALTIME | lower %}
-          <div class="token-card" id="tcard_{{ loop.index0 }}">
+          <div
+            class="token-card {% if 'breakfast' in meal_lc %}meal-bf{% elif 'lunch' in meal_lc %}meal-lunch{% else %}meal-dinner{% endif %}"
+            id="tcard_{{ loop.index0 }}">
 
-            <div class="token-meal-badge {% if 'breakfast' in meal_lc %}bf{% elif 'lunch' in meal_lc %}lunch{% else %}dinner{% endif %}">
+            <div
+              class="token-meal-badge {% if 'breakfast' in meal_lc %}bf{% elif 'lunch' in meal_lc %}lunch{% else %}dinner{% endif %}">
               {% if 'breakfast' in meal_lc %}🌅
               {% elif 'lunch' in meal_lc %}☀️
               {% else %}🌙{% endif %}
@@ -1948,11 +2247,9 @@
               <div class="token-inline-msg" id="tmsg_{{ loop.index0 }}"></div>
             </div>
 
-            <button
-              class="token-cancel-btn"
-              id="tcbtn_{{ loop.index0 }}"
-              onclick="cancelToken({{ loop.index0 }}, {{ t.TOKEN_NAME | tojson }}, {{ t.ExpireDate | tojson }}, {{ t.MEALTIME | tojson }}, {{ t.TOKEN_QTY | tojson }})"
-            >Cancel</button>
+            <button class="token-cancel-btn" id="tcbtn_{{ loop.index0 }}" data-idx="{{ loop.index0 }}"
+              data-dish="{{ t.TOKEN_NAME | e }}" data-date="{{ t.ExpireDate | e }}" data-meal="{{ t.MEALTIME | e }}"
+              data-qty="{{ t.TOKEN_QTY | e }}">Cancel</button>
 
           </div>
           {% endfor %}
@@ -1971,17 +2268,76 @@
     </div>
   </div>
 
-  <script>
-    function cancelToken(idx, dishName, date, meal, qty) {
-      const label = `${qty}× ${dishName} for ${date} (${meal})`;
-      if (!confirm(`Cancel ${label}?\n\nThis cannot be undone.`)) return;
+  <!-- ── Custom confirmation modal (single reusable instance) ── -->
+  <div class="tc-overlay" id="tcOverlay" role="dialog" aria-modal="true" aria-labelledby="tcModalTitle">
+    <div class="tc-modal">
+      <div class="tc-modal-icon" id="tcModalIcon">⚠️</div>
+      <div class="tc-modal-title" id="tcModalTitle">Cancel this token?</div>
+      <div class="tc-modal-sub" id="tcModalSub">This cannot be undone.</div>
+      <div class="tc-modal-actions">
+        <button class="tc-btn-keep" id="tcBtnKeep" onclick="closeModal()">Keep it</button>
+        <button class="tc-btn-confirm" id="tcBtnConfirm">Yes, Cancel</button>
+      </div>
+    </div>
+  </div>
 
-      const btn  = document.getElementById('tcbtn_' + idx);
-      const msg  = document.getElementById('tmsg_' + idx);
+  <script>
+    /* ────────────────────────────────────────────────────────────────
+       Modal state
+    ──────────────────────────────────────────────────────────────── */
+    let _modalConfirmFn = null;   // called when user clicks "Yes, Cancel"
+
+    function openModal({ icon = '⚠️', title, sub, confirmLabel = 'Yes, Cancel', onConfirm }) {
+      document.getElementById('tcModalIcon').textContent = icon;
+      document.getElementById('tcModalTitle').textContent = title;
+      document.getElementById('tcModalSub').textContent = sub;
+      const confirmBtn = document.getElementById('tcBtnConfirm');
+      confirmBtn.textContent = confirmLabel;
+      _modalConfirmFn = onConfirm;
+      confirmBtn.onclick = () => { const fn = _modalConfirmFn; closeModal(); if (fn) fn(); }
+      document.getElementById('tcOverlay').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('tcOverlay').classList.remove('open');
+      _modalConfirmFn = null;
+    }
+
+    // Close on backdrop click
+    document.getElementById('tcOverlay').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+    // Close on Escape
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* ────────────────────────────────────────────────────────────────
+       Per-row cancel  (delegated — reads from data-* attributes)
+    ──────────────────────────────────────────────────────────────── */
+    document.addEventListener('click', function (e) {
+      const btn = e.target.closest('.token-cancel-btn');
+      if (!btn || btn.disabled) return;
+
+      const idx = btn.dataset.idx;
+      const dishName = btn.dataset.dish;
+      const date = btn.dataset.date;
+      const meal = btn.dataset.meal;
+      const qty = btn.dataset.qty;
+
+      openModal({
+        icon: '⚠️',
+        title: `Cancel ${qty}\u00d7 ${dishName}?`,
+        sub: `📅 ${date} · ${meal}\u2003\u00b7\u2003This cannot be undone.`,
+        confirmLabel: 'Yes, Cancel',
+        onConfirm: () => performSingleCancel({ idx, dishName, date, meal, btn })
+      });
+    });
+
+    function performSingleCancel({ idx, dishName, date, meal, btn }) {
+      const msg = document.getElementById('tmsg_' + idx);
       const card = document.getElementById('tcard_' + idx);
 
       btn.disabled = true;
-      btn.textContent = 'Cancelling…';
+      btn.textContent = 'Cancelling\u2026';
       msg.className = 'token-inline-msg';
       msg.style.display = 'none';
 
@@ -1990,40 +2346,146 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dish_name: dishName, date: date, meal: meal })
       })
-      .then(r => r.json())
-      .then(data => {
-        if (data.ok) {
-          card.style.transition = 'opacity 0.3s, transform 0.3s';
-          card.style.opacity = '0';
-          card.style.transform = 'translateX(20px)';
-          setTimeout(() => {
-            card.remove();
-            const list = document.getElementById('tokenList');
-            if (list && list.children.length === 0) {
-              list.outerHTML = '<div class="tokens-empty"><p>🎟️</p><p>All tokens cancelled. <a href="/dashboard" style="color:#0d9488;">Book more</a>.</p></div>';
-            }
-          }, 320);
-        } else {
+        .then(r => r.json())
+        .then(data => {
+          if (data.ok) {
+            animateCardOut(card);
+          } else {
+            btn.disabled = false;
+            btn.textContent = 'Cancel';
+            msg.textContent = data.msg || 'Something went wrong. Try again.';
+            msg.className = 'token-inline-msg error';
+          }
+        })
+        .catch(err => {
           btn.disabled = false;
           btn.textContent = 'Cancel';
-          msg.textContent = data.msg || 'Something went wrong. Try again.';
+          msg.textContent = 'Network error: ' + err.message;
           msg.className = 'token-inline-msg error';
-        }
-      })
-      .catch(err => {
-        btn.disabled = false;
-        btn.textContent = 'Cancel';
-        msg.textContent = 'Network error: ' + err.message;
-        msg.className = 'token-inline-msg error';
+        });
+    }
+
+    function animateCardOut(card, cb) {
+      card.style.transition = 'opacity 0.28s ease, transform 0.28s ease, max-height 0.32s ease, margin 0.32s ease, padding 0.32s ease';
+      card.style.opacity = '0';
+      card.style.transform = 'translateX(18px)';
+      card.style.maxHeight = card.offsetHeight + 'px';
+      // collapse height after fade
+      setTimeout(() => {
+        card.style.maxHeight = '0';
+        card.style.marginBottom = '0';
+        card.style.padding = '0';
+        card.style.overflow = 'hidden';
+      }, 280);
+      setTimeout(() => {
+        card.remove();
+        checkListEmpty();
+        if (cb) cb();
+      }, 580);
+    }
+
+    function checkListEmpty() {
+      const list = document.getElementById('tokenList');
+      if (list && list.children.length === 0) {
+        list.outerHTML = '<div class="tokens-empty"><p>\ud83c\udf9f\ufe0f</p><p>All tokens cancelled. <a href="/dashboard" style="color:#0d9488;">Book more</a>.</p></div>';
+      }
+    }
+
+    /* ────────────────────────────────────────────────────────────────
+       Cancel-All flow
+    ──────────────────────────────────────────────────────────────── */
+    function openCancelAllModal() {
+      const cards = document.querySelectorAll('#tokenList .token-cancel-btn');
+      const count = cards.length;
+      if (count === 0) return;
+
+      openModal({
+        icon: '🗑',
+        title: `Cancel all ${count} token${count !== 1 ? 's' : ''}?`,
+        sub: 'Each token will be cancelled one by one. This cannot be undone.',
+        confirmLabel: `Cancel All ${count}`,
+        onConfirm: runCancelAll
       });
+    }
+
+    async function runCancelAll() {
+      // Collect snapshot of all current token rows
+      const buttons = Array.from(document.querySelectorAll('#tokenList .token-cancel-btn'));
+      if (buttons.length === 0) return;
+
+      // Disable Cancel All button
+      const caBtn = document.getElementById('cancelAllBtn');
+      if (caBtn) { caBtn.disabled = true; caBtn.textContent = '⏳ Cancelling…'; }
+
+      // Show progress strip
+      const strip = document.getElementById('batchProgress');
+      const statusEl = document.getElementById('batchStatusLine');
+      const barEl = document.getElementById('batchProgressBar');
+      const resultEl = document.getElementById('batchResultList');
+      strip.classList.add('visible');
+      resultEl.innerHTML = '';
+      barEl.style.width = '0%';
+
+      let done = 0, succeeded = 0, failed = 0;
+      const total = buttons.length;
+
+      for (const btn of buttons) {
+        const dishName = btn.dataset.dish;
+        const date = btn.dataset.date;
+        const meal = btn.dataset.meal;
+        const idx = btn.dataset.idx;
+        const card = document.getElementById('tcard_' + idx);
+
+        statusEl.textContent = `Cancelling ${done + 1} of ${total} — ${dishName}…`;
+
+        try {
+          const r = await fetch('/cancel-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dish_name: dishName, date: date, meal: meal })
+          });
+          const data = await r.json();
+
+          if (data.ok) {
+            succeeded++;
+            if (card) animateCardOut(card);
+            addBatchResult(resultEl, `✅ ${dishName} · ${date}`, 'ok');
+          } else {
+            failed++;
+            addBatchResult(resultEl, `❌ ${dishName} · ${date} — ${data.msg || 'Failed'}`, 'fail');
+          }
+        } catch (err) {
+          failed++;
+          addBatchResult(resultEl, `❌ ${dishName} · ${date} — Network error`, 'fail');
+        }
+
+        done++;
+        barEl.style.width = Math.round((done / total) * 100) + '%';
+
+        // Small delay so UI can breathe between requests
+        await new Promise(res => setTimeout(res, 180));
+      }
+
+      // Final summary
+      statusEl.textContent = `Done — ${succeeded} cancelled${failed > 0 ? `, ${failed} failed` : ''}. 🎉`;
+      if (caBtn) { caBtn.disabled = true; caBtn.textContent = '✓ Done'; }
+
+      // Wait for animations then check empty state
+      setTimeout(checkListEmpty, 650);
+    }
+
+    function addBatchResult(container, text, type) {
+      const el = document.createElement('div');
+      el.className = 'batch-result-item ' + type;
+      el.textContent = text;
+      container.prepend(el);
     }
   </script>
 
   {% endif %}
 
   <footer style="text-align:center;padding:24px 20px;margin-top:40px;border-top:1px solid #e5e7eb;">
-    <span
-      style="color:#d1d5db;font-size:0.68rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;">Made
+    <span style="color:#d1d5db;font-size:0.68rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;">Made
       by Sriram R</span>
   </footer>
   <!-- ── PWA: install as app ─────────────────────────────────────────── -->
@@ -2046,7 +2508,7 @@
       font-weight: 700;
       font-size: 0.8rem;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(13,148,136,0.25);
+      box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
       white-space: nowrap;
     }
 

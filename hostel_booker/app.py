@@ -398,17 +398,10 @@ def book():
     )
 
 
-
-
-
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("index"))
-
-
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
 
 def get_booked_tokens(s):
     """Fetch the student's currently booked (unconsumed) tokens."""
@@ -432,6 +425,16 @@ def tokens():
     s = build_requests_session()
     booked = get_booked_tokens(s)
     save_session_cookies(s)
+
+    # Sort by ExpireDate ascending (soonest first)
+    def parse_date(t):
+        try:
+            return datetime.datetime.strptime(t.get("ExpireDate", ""), "%d-%m-%Y")
+        except Exception:
+            return datetime.datetime.max  # unparseable dates sink to the bottom
+
+    booked.sort(key=parse_date)
+
     return render_template("index.html", view="tokens", booked=booked,
                            rollno=session.get("rollno", "Unknown"))
 
@@ -469,4 +472,9 @@ def cancel_token():
             return {"ok": True, "msg": "Cancelled successfully"}
         return {"ok": False, "msg": f"Portal rejected cancellation (code {result.get('oresult')})"}
     except Exception as e:
-        return {"ok": False, "msg": str(e)[:200]}
+        return {"ok": False, "msg": str(e)[:200]}    
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
+
