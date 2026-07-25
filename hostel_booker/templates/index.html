@@ -29,11 +29,19 @@
     }
 
     :root {
-      --bg-gradient: #f7f8fa;
+      /* Rich mesh gradient — gives backdrop-filter something colourful to blur */
+      --bg-gradient: linear-gradient(135deg,
+          #e8f5f3 0%,
+          #f0fdf9 18%,
+          #f7f8fa 35%,
+          #ecfdf5 52%,
+          #f0f9ff 68%,
+          #faf5ff 84%,
+          #f0fdf4 100%);
       --glass-bg: #ffffff;
       --glass-border: #e5e7eb;
       --glass-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06);
-      --glass-blur: none;
+      --glass-blur: blur(12px);
 
       --primary: #0d9488;
       --primary-hover: #0f766e;
@@ -62,8 +70,9 @@
       height: 100%;
       min-height: 100%;
       font-family: 'Poppins', sans-serif;
+      /* Rich gradient background — essential for backdrop-filter to be visible */
       background: var(--bg-gradient);
-      background-color: #f7f8fa;
+      background-attachment: fixed;
       color: var(--text);
       line-height: 1.6;
       overflow-x: hidden;
@@ -83,7 +92,8 @@
 
     .particle {
       position: absolute;
-      background: rgba(13, 148, 136, 0.06);
+      /* Boosted opacity so blobs are visible through the glass blur */
+      background: rgba(16, 185, 129, 0.18);
       border-radius: 50%;
       animation: float 20s linear infinite;
     }
@@ -263,7 +273,8 @@
       border-radius: var(--radius);
       padding: 40px;
       position: relative;
-      overflow: hidden;
+      /* overflow:hidden removed — it clips backdrop-filter on child .dish-row elements */
+      overflow: visible;
     }
 
     .glass-input {
@@ -640,11 +651,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      /* Mobile: 16px breathing room each side */
+      padding: 0 16px;
     }
 
     .login-card {
       width: 100%;
       max-width: 440px;
+      /* Real glassmorphism — matches dish-row values */
+      background: rgba(255, 255, 255, 0.55) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(16, 185, 129, 0.25) !important;
+      box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
     }
 
     .login-title {
@@ -656,6 +675,16 @@
       font-size: 1.8rem;
       font-weight: 800;
       margin-bottom: 10px;
+      /* Fix 3: heading is visually dominant */
+      color: var(--text);
+    }
+
+    /* Fix 3: subtitle clearly secondary */
+    .login-title .subtitle {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      opacity: 0.85;
     }
 
     .form-group {
@@ -952,9 +981,10 @@
               </svg>
             </button>
           </div>
-          <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 6px;">
+          <!-- Fix 3: hint text is clearly secondary -->
+          <p style="font-size: 0.72rem; color: var(--text-dim); font-weight: 400; opacity: 0.8; margin-top: 6px;">
             Format is usually your date of birth, e.g. <span
-              style="color: var(--text-muted); font-weight: 600;">31FEB07</span> (DDMonYY)
+              style="color: var(--text-dim); font-weight: 500;">31FEB07</span> (DDMonYY)
           </p>
 
         </div>
@@ -1022,7 +1052,18 @@
           <a href="/tokens" class="btn btn-secondary"
             style="padding: 8px 14px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:6px;">🎟️ My
             Tokens</a>
-          <a href="/logout" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">⏻ Logout</a>
+          <!-- Fix 5: replace ⏻ with universally-supported SVG logout icon -->
+          <a href="/logout" class="btn btn-secondary"
+            style="padding: 8px 16px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+              style="flex-shrink:0;">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Logout
+          </a>
         </div>
       </div>
 
@@ -1059,7 +1100,22 @@
               data-dish-name="{{ dish.name }}" data-max-qty="{{ dish.max_qty }}">
 
               <div class="dish-name-col">
-                <div class="dish-name">{{ dish.name }}</div>
+                <!-- Fix 1: dish name + food emoji in header row -->
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="dish-name">{{ dish.name }}</div>
+                  <span class="dish-emoji" aria-hidden="true">
+                    {%- if 'MUSHROOM' in dish.name.upper() -%}🍄
+                    {%- elif 'CHICKEN' in dish.name.upper() or 'CHETINAD' in dish.name.upper() -%}🍗
+                    {%- elif 'MUTTON' in dish.name.upper() -%}🍖
+                    {%- elif 'PANEER' in dish.name.upper() -%}🧀
+                    {%- elif 'BABY CORN' in dish.name.upper() or 'CORN' in dish.name.upper() -%}🌽
+                    {%- elif 'OMELETTE' in dish.name.upper() -%}🍳
+                    {%- elif 'EGG' in dish.name.upper() -%}🥚
+                    {%- elif 'GOBI' in dish.name.upper() or 'CHILLI' in dish.name.upper() -%}🍤
+                    {%- else -%}🍽️
+                    {%- endif -%}
+                  </span>
+                </div>
                 {% if not dish.has_tokens %}
                 <div class="no-tokens-msg">No tokens this cycle</div>
                 {% endif %}
@@ -1124,16 +1180,30 @@
   </div>
 
   <style>
+    /* ── Real glassmorphism on dish cards ─────────────────────── */
     .dish-row {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
+      /* Exact values requested — semi-transparent so gradient bg shows through */
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+      border-radius: 16px;
       padding: 16px;
       margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 16px;
       flex-wrap: wrap;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      /* isolate so stacking context doesn't interfere with blur */
+      isolation: isolate;
+    }
+
+    .dish-row:not(.disabled):hover {
+      background: rgba(255, 255, 255, 0.68);
+      border-color: rgba(16, 185, 129, 0.42);
+      box-shadow: 0 6px 28px rgba(16, 185, 129, 0.14), 0 1px 4px rgba(0, 0, 0, 0.06);
     }
 
     .dish-row.disabled {
@@ -1142,6 +1212,16 @@
 
     .dish-row.skipped {
       opacity: 0.45;
+    }
+
+    /* Fix 1: Food emoji badge shown on the right of each dish row header */
+    .dish-emoji {
+      font-size: 1.4rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-left: auto;
+      align-self: flex-start;
+      margin-top: 2px;
     }
 
     .dish-name-col {
@@ -1485,7 +1565,18 @@
             <p style="font-size: 0.8rem; color: var(--text-muted);">PSG iTech · Roll No: {{ rollno }}</p>
           </div>
         </div>
-        <a href="/logout" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.8rem;">⏻ Logout</a>
+        <!-- Fix 5: SVG logout icon on preview page header -->
+        <a href="/logout" class="btn btn-secondary"
+          style="padding: 8px 16px; font-size: 0.8rem; display:inline-flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+            style="flex-shrink:0;">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout
+        </a>
       </div>
 
       <div class="glass-card">
@@ -1606,10 +1697,14 @@
               <div style="color:#374151;font-size:14px;margin-top:4px;">❌ Failed</div>
             </div>
           </div>
-          <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;padding-bottom:16px;">
+          <!-- Fix 4: add "View Tokens" button alongside "Book More" -->
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;padding-bottom:16px;">
             <a href="/dashboard"
               style="padding:12px 32px;background:#0d9488;color:white;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;">📅
               Book More</a>
+            <a href="/tokens"
+              style="padding:12px 32px;background:#0d9488;color:white;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;">🎟️
+              View Tokens</a>
             <a href="/logout"
               style="padding:12px 32px;background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:12px;font-weight:600;text-decoration:none;font-size:15px;">Logout</a>
           </div>
