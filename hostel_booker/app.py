@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import datetime
+import re
 
 # Force UTF-8 output on Windows (avoids charmap codec errors for → ✓ etc.)
 if hasattr(sys.stdout, "reconfigure"):
@@ -472,8 +473,35 @@ def cancel_token():
             return {"ok": True, "msg": "Cancelled successfully"}
         return {"ok": False, "msg": f"Portal rejected cancellation (code {result.get('oresult')})"}
     except Exception as e:
-        return {"ok": False, "msg": str(e)[:200]}    
+        return {"ok": False, "msg": str(e)[:200]}   
 
+
+@app.route("/view-qr")
+def view_qr():
+    if not session.get("portal_cookies"):
+        return redirect(url_for("index"))
+
+    s = build_requests_session()
+    all_tokens = get_booked_tokens(s)
+    active_tokens = [t for t in all_tokens if t.get("ViewStatus") == "1"]
+
+    qr_data_uri = None
+    if active_tokens:
+        # Only hit the portal's QR endpoint when something is actually active —
+        # calling it with nothing active appears to invalidate the real portal
+        # session server-side, breaking every subsequent request.
+        qr_resp = s.get(f"{BASE_URL}/QRCode/QRcodeGenerate", headers=PORTAL_HEADERS, timeout=20)
+        match = re.search(r'src="(data:image/png;base64,[^"]+)"', qr_resp.text)
+        qr_data_uri = match.group(1) if match else None
+
+    save_session_cookies(s)
+
+    return render_template(
+        "index.html", view="qr",
+        qr_data_uri=qr_data_uri,
+        active_tokens=active_tokens,
+        rollno=session.get("rollno", "Unknown"),
+    )
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
