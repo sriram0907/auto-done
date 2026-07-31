@@ -41,7 +41,7 @@ PTOKEN_MAP = {
 # (see e.g. "quantityInput6 > 2" for most, but omelette allows 3)
 DEFAULT_MAX_QTY = 2
 MAX_QTY_MAP = {
-    "OMELETTE": 3,
+    "OMELETTE": 2,
 }
 
 def get_max_qty(dish_name):
@@ -481,26 +481,25 @@ def view_qr():
     if not session.get("portal_cookies"):
         return redirect(url_for("index"))
 
-    # 1. Build session and fetch tokens FIRST (this is the safe endpoint)
+    
     s = build_requests_session()
     all_tokens = get_booked_tokens(s)
     active_tokens = [t for t in all_tokens if t.get("ViewStatus") == "1"]
 
     qr_data_uri = None
 
-    # 2. Only hit the risky QR endpoint if we actually have an active token to show.
-    # This completely prevents the server-side session corruption the previous AI diagnosed.
+    
     if active_tokens:
         qr_resp = s.get(f"{BASE_URL}/QRCode/QRcodeGenerate", headers=PORTAL_HEADERS, timeout=20)
         match = re.search(r'src="(data:image/png;base64,[^"]+)"', qr_resp.text)
         
-        # 3. Prevent UnboundLocalError by checking match inside the block
+        
         if match:
-            # 4. Strip hidden ASP.NET line breaks so the browser actually renders the image
+            
             raw_uri = match.group(1)
             qr_data_uri = raw_uri.replace('\n', '').replace('\r', '').replace(' ', '')
 
-    # 5. Save cookies safely. We only hit the QR endpoint in a valid state.
+    
     save_session_cookies(s)
 
     return render_template(
