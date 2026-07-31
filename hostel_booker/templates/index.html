@@ -2622,7 +2622,7 @@
             border-radius: var(--radius);
             box-shadow: var(--glass-shadow);
           ">
-            <img src="{{ qr_data_uri }}" alt="My QR Code"
+            <img src="{{ qr_data_uri | safe }}" alt="My QR Code"
               style="width: 260px; height: 260px; object-fit: contain; display: block; border-radius: 8px;" />
           </div>
           <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; font-weight: 400;">
