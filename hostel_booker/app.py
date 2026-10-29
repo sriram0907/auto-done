@@ -68,10 +68,12 @@ PORTAL_HEADERS = {
 
 DISH_SCHEDULE = {
     "CHILLI GOBI": {
+        "Tuesday": "Dinner",
         "Thursday": "Dinner",
         "Sunday":   "Lunch",
     },
     "CHICKEN PALLIPALAYAM/CHETINAD": {
+        "Tuesday":   "Dinner",
         "Sunday":   "Lunch",
         "Thursday": "Dinner",
     },
@@ -92,7 +94,9 @@ DISH_SCHEDULE = {
         "Wednesday":   "Dinner",
     },
     "MUTTON CURRY":        {},
-    "BABY CORN MANCHURIAN": {},
+    "BABY CORN MANCHURIAN": {
+        "Thursday":"Dinner",
+    },
     "PANEER":              {},
 }
 
