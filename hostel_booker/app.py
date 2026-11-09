@@ -89,8 +89,12 @@ DISH_SCHEDULE = {
         "Sunday":    "Breakfast",
     },
     "BOILED EGG/EGG KURMA": {
+        "Monday": "Breakfast",
         "Tuesday": "Lunch",
+        "Thursday": "Breakfast",
+        "Thursday": "Lunch",
         "Saturday": "Dinner",
+        "Friday":"Lunch",
         "Wednesday":   "Dinner",
     },
     "MUTTON CURRY":        {},
